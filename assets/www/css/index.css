@@ -21,6 +21,7 @@ body.x-desktop{font-size:163%}/*override*/
 /*for test*/
 .tab-content .x-inner{background-image:url(../img/720.png);background-repeat: no-repeat;background-size:cover}
 body.x-desktop .tab-content .x-inner{background-size:480px;}
+
 /* @class  */
 .schedule-icon,.card-icon,.score-icon,.talk-icon,.user-icon{position: absolute;  top: 0;  right: 0;  bottom: 0;  left: 0;  text-align: center;  font-family: "Pictos";}
 .x-tab .x-button-icon.user-icon:before{content: "U";}
@@ -40,9 +41,10 @@ body.x-desktop .tab-content .x-inner{background-size:480px;}
 /* xiaoyuanzixun */
 .tab-header{height:2.1em;line-height:2.1em;background:#2075A4;color:#eee;font-size:1.5em;text-align:center;}
 
-
-
-
+/* gerenzhongxin */
+.person .person-content .x-inner{background-image:url(../img/720-1.png);background-repeat: no-repeat;background-size:cover}
+body.x-desktop .person .person-content .x-inner{background-size:480px;}
+.person .person-content .x-button{}
 
 
 

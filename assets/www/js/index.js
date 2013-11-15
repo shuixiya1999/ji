@@ -1,94 +1,9 @@
 (function(db){
-	var after=function(){
-//		var w = Ext.getDoc().getWidth();
-//		alert(w);
-		
-//		document.getElementsByTagName('body')[0].style.zoom=w/720
-	}
-	
 	Ext.application({
 		requires: ['Ext.Anim'],
 	    launch: function() {
-	    	var picker = Ext.widget('datepicker',{
-	        	yearFrom: 2004,
-	        	cancelButton: '取消',
-	        	doneButton: {
-	        		text: '完成',
-	        		handler: function(){
-	        			var date = picker.getValue(true);
-	        			picker.btn.date = date;
-	        			picker.btn.setText(date2str(date));
-	        		}
-	        	}
-	        }),
-	    	pickerFn = function(b){
-	    		picker.btn = b;
-	    		if(b.date){
-	    			picker.setValue(b.date);
-	    		}else{
-	    			picker.setValue(b.initialConfig.date);
-	    		}
-	    		picker.show();
-	    	},
-	    	fromDate = new Date(new Date()-1000*3600*24*7),
-	    	from = date2str(fromDate),
-	    	toDate = new Date,
-	    	to = date2str(toDate),
-	    	
-	    	checkDetail = function(btn) {
-	        	var view = btn.parent.parent,
-	            cardPanel = view.push({
-	                title: '钱到哪里去了?',
-	                id: 'card-detail-panel',
-	                masked: {
-	                	xtype: 'loadmask',
-	                	hidden: true,
-	                    message: '查询中...'
-	                },
-	                items: [{
-	                	layout: 'hbox',
-	                	height: 100,
-	                	items: [{
-	                		flex: 1,
-	                		cls: 'card-detail-lbl',
-	                		html: '从'
-	                	},{
-	                		xtype: 'button',
-	                		cls: 'date',
-	                		id: 'start',
-	                		date: fromDate,
-	                		text: from,
-	                		flex: 2,
-	                		margin: '17 10',
-	                		handler: pickerFn
-	                	},{
-	                		flex: 1,
-	                		cls: 'card-detail-lbl',
-	                		html: '到'
-	                	},{
-	                		xtype: 'button',
-	                		cls: 'date',
-	                		id: 'end',
-	                		date: toDate,
-	                		text: to,
-	                		flex: 2,
-	                		margin: '17 10',
-	                		handler: pickerFn
-	                	},{
-	                		xtype: 'button',
-	                		iconCls: 'search',
-	                		flex: 1,
-	                		margin: '17 10',
-	                		handler: cardSearch
-	                	}]
-	                },{
-	                	id: 'cardDetail',
-	                	scrollable: true,
-	                	height: '100%',
-	                	html: '说些什么吧...' // must have
-	                }]
-	            }).setMasked(false);
-	        };
+	    	var pickerFn = createPickerFn(),
+	    		checkDetail = createCheckDetail(pickerFn);
 	        
 	        var termPicker = Ext.widget('picker', {
 	            doneButton: '完成',
@@ -99,6 +14,7 @@
 	            }
 	        }).onBefore('show', termPickerShow);
 	    	
+	        var nestedList = createNestedList();
 	        //we send a config block into the Ext.Viewport.add method which will
 	        //create our tabpanel
 	        var tabPanel = Ext.Viewport.add({
@@ -106,24 +22,18 @@
 	            xtype: 'tabpanel',
 	            id: 'tabpanel',
 	            activeItem: 1,
-//	            disabled: true,
 	            tabBar: {
 	                // Dock it to the bottom
 	                docked: 'bottom',
-
-	                // Change the layout so each of the tabs are centered vertically and horizontally
 	                layout: {
 	                    pack: 'center',
 	                    align: 'center'
 	                },
-
-	                // Make the tabbar scrollable horizontally, and disabled the indicators
 	                scrollable: {
 	                    direction: 'horizontal',
 	                    indicators: false
 	                }
 	            },
-
 	            //here we specify the ui of the tabbar to light
 	            ui: 'light',
 
@@ -143,30 +53,44 @@
 	                	html: ''
 	                }]
 	            },{
-//	                html: '<img src="img/720.png" />',
-	                items: [{
-	                	cls: 'tab-header',
-	                	html: '校园资讯'
-	                },{
-	                	scrollable: true,
-	                	height: '100%',
-	                	cls: 'tab-content',
-	                	html: ''
-	                }],
+	            	title: '校园资讯',// just a flag
+	                items: nestedList,
 	                iconCls: 'info',
 	                cls: 'card6'
 	            },{
-	            	items: [{
-	                	cls: 'tab-header',
-	                	html: '个人中心'
-	                },{
-	                	scrollable: true,
+	            	title: '个人中心',// just a flag
+	                iconCls: 'card-icon',
+	                cls: 'person',
+	                items: [{
+	                	xtype: 'navigationview',
 	                	height: '100%',
-	                	cls: 'tab-content',
-	                	html: ''
-	                }],
-	                iconCls: 'info',
-	                cls: 'card6'
+	                	id: 'card-nav',
+	                	defaultBackButtonText: '返回',
+	                	items: [{
+	                        title: '个人中心',
+	                        cls: 'person-content',
+//	                        scrollable: true,
+	                        layout: {
+	                        	type: 'hbox',
+	                        	align: 'start'
+	                        },
+	                        defaults: {
+	                        	width: 100,
+	                        	height: 100,
+	                        	margin: '10 5'
+	                        },
+	                        items: [{
+	                            xtype: 'button',
+	                            text: '我的课表',
+	                            handler: pushSchedule
+//	                            handler: checkBalance
+	                        },{
+	                        	xtype: 'button',
+	                            text: '明细查询',
+//	                            handler: checkDetail
+	                        }]
+	                    }]
+	                }]
 	            },{
 	            	items: [{
 	                	cls: 'tab-header',
@@ -194,7 +118,6 @@
 	            }]
 	        });// TabPanel
 	        
-	        after();
 	    }//launch
 	});// application done!
 	
@@ -218,7 +141,11 @@
 	var date2str = function(date){
 		return '<span class="date-month">'+(date.getMonth()+1)+'月<br>'+date.getFullYear()+
 			'</span><span class="date-day">'+date.getDate()+'</span>';
-	};
+	},
+	fromDate = new Date(new Date()-1000*3600*24*7),
+	from = date2str(fromDate),
+	toDate = new Date,
+	to = date2str(toDate);
 	
 	var initSchedule = function(cont) {
     	var tpl = new Ext.XTemplate(
@@ -236,8 +163,8 @@
     showSchedule = function(cont){
     	var scheduleBody = cont.getComponent('scheduleBody').innerHtmlElement;
     	Ext.Ajax.request({
-//			url: 'data/queryStudentsCurriculum.js',
-			url: URL,
+			url: 'data/queryStudentsCurriculum.js',
+//			url: URL,
 			disableCaching: false,
 			params: {
 				json: Ext.encode([{
@@ -282,8 +209,8 @@
 				});
 			}//success
 		});//request
-    },//showSchedule
-    checkBalance = function(btn) {
+    };//showSchedule
+    var checkBalance = function(btn) {
     	var view = btn.parent.parent;
         view.push({
             title: '我还有多少钱?',
@@ -581,4 +508,151 @@
     	};
     	pk.setSlots([slot]);
     };//termPickerShow
+    function createPickerFn(){
+    	var picker = Ext.widget('datepicker',{
+        	yearFrom: 2004,
+        	cancelButton: '取消',
+        	doneButton: {
+        		text: '完成',
+        		handler: function(){
+        			var date = picker.getValue(true);
+        			picker.btn.date = date;
+        			picker.btn.setText(date2str(date));
+        		}
+        	}
+        });
+    	return function(b){
+    		picker.btn = b;
+    		if(b.date){
+    			picker.setValue(b.date);
+    		}else{
+    			picker.setValue(b.initialConfig.date);
+    		}
+    		picker.show();
+    	}
+    }
+    function createCheckDetail(pickerFn){
+    	return function(btn) {
+        	var view = btn.parent.parent,
+            cardPanel = view.push({
+                title: '钱到哪里去了?',
+                id: 'card-detail-panel',
+                masked: {
+                	xtype: 'loadmask',
+                	hidden: true,
+                    message: '查询中...'
+                },
+                items: [{
+                	layout: 'hbox',
+                	height: 100,
+                	items: [{
+                		flex: 1,
+                		cls: 'card-detail-lbl',
+                		html: '从'
+                	},{
+                		xtype: 'button',
+                		cls: 'date',
+                		id: 'start',
+                		date: fromDate,
+                		text: from,
+                		flex: 2,
+                		margin: '17 10',
+                		handler: pickerFn
+                	},{
+                		flex: 1,
+                		cls: 'card-detail-lbl',
+                		html: '到'
+                	},{
+                		xtype: 'button',
+                		cls: 'date',
+                		id: 'end',
+                		date: toDate,
+                		text: to,
+                		flex: 2,
+                		margin: '17 10',
+                		handler: pickerFn
+                	},{
+                		xtype: 'button',
+                		iconCls: 'search',
+                		flex: 1,
+                		margin: '17 10',
+                		handler: cardSearch
+                	}]
+                },{
+                	id: 'cardDetail',
+                	scrollable: true,
+                	height: '100%',
+                	html: '说些什么吧...' // must have
+                }]
+            }).setMasked(false);
+        };
+    }
+    function createNestedList(){
+    	var data = {
+		     children: [{
+		         text: 'Drinks',
+		         leaf: true
+		     }, {
+		         text: 'Fruit',
+		         leaf: true
+		     }, {
+		         text: 'Snacks',
+		         leaf: true
+		     }]
+		 };
+
+		 Ext.define('ListItem', {
+		     extend: 'Ext.data.Model',
+		     config: {
+		         fields: ['text']
+		     }
+		 });
+
+		 var store = Ext.create('Ext.data.TreeStore', {
+		     model: 'ListItem',
+		     root: data
+		 });
+
+		 return Ext.create('Ext.NestedList', {
+		     title: '校园资讯',
+		     height: '100%',
+		     displayField: 'text',
+		     detailCard: new Ext.Panel(),
+		     store: store,
+		     listeners: {
+                leafitemtap: function(me, list, index, item, e) {
+                    var store = list.getStore(),
+                        record  = store.getAt(index),
+                        detailCard = me.getDetailCard();
+                    	
+//                    list.setMasked({
+//                        xtype: 'loadmask',
+//                        message: 'Loading'
+//                    });
+                    
+                    detailCard.setHtml(record.get('text'));
+//                    list.unmask();
+                }
+            }
+		 });
+    }//校园资讯
+    function pushSchedule(btn){
+    	var view = btn.parent.parent,
+        	cont = view.push({
+            title: '我的课表',
+//            cls: 'card-total',
+            items: [{
+            	html: '<table class="schedule_grid"><thead>'+
+            		'<tr><th></th><td>日</td><td>一</td><td>二</td><td>三</td><td>四</td><td>五</td><td>六</td></tr>'+
+            	'</thead></table>'
+            },{
+            	scrollable: true,
+            	height: '100%',
+            	itemId: 'scheduleBody',
+            	html: ''
+            }]
+        });
+        initSchedule(cont);
+        showSchedule(cont);
+    }
 })(db);
