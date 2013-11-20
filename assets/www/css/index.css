@@ -42,9 +42,11 @@ body.x-desktop .tab-content .x-inner{background-size:480px;}
 .tab-header{height:2.1em;line-height:2.1em;background:#2075A4;color:#eee;font-size:1.5em;text-align:center;}
 
 /* gerenzhongxin */
-.person .person-content .x-inner{background-image:url(../img/720-1.png);background-repeat: no-repeat;background-size:cover}
-body.x-desktop .person .person-content .x-inner{background-size:480px;}
-.person .person-content .x-button{}
+.person .person-content .x-scroll-container>.x-inner{background-image:url(../img/720-1.png);background-repeat: no-repeat;background-size:cover}
+body.x-desktop .person .person-content .x-scroll-container>.x-inner{background-size:480px;}
+.person{font-size:.6em;text-align:center}
+.person .person-content .x-button{background:transparent;}
+.scheduleBody .schedule_grid{margin-bottom:30px}
 
 
 

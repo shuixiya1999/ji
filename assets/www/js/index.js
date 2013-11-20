@@ -2,6 +2,11 @@
 	Ext.application({
 		requires: ['Ext.Anim'],
 	    launch: function() {
+	    	var WIDTH = Ext.getDoc().getWidth();
+	    	if(Ext.os.deviceType === 'Desktop'){
+	    		WIDTH = 480;
+	    	}
+	    	
 	    	var pickerFn = createPickerFn(),
 	    		checkDetail = createCheckDetail(pickerFn);
 	        
@@ -21,7 +26,7 @@
 	            //first we define the xtype, which is tabpanel for the Tab Panel component
 	            xtype: 'tabpanel',
 	            id: 'tabpanel',
-	            activeItem: 1,
+	            activeItem: 2,
 	            tabBar: {
 	                // Dock it to the bottom
 	                docked: 'bottom',
@@ -64,32 +69,46 @@
 	                items: [{
 	                	xtype: 'navigationview',
 	                	height: '100%',
-	                	id: 'card-nav',
+	                	id: 'person-nav',
 	                	defaultBackButtonText: '返回',
-	                	items: [{
+	                	items: {
 	                        title: '个人中心',
 	                        cls: 'person-content',
-//	                        scrollable: true,
-	                        layout: {
-	                        	type: 'hbox',
-	                        	align: 'start'
-	                        },
+	                        scrollable: true,
+	                        layout: 'hbox',
 	                        defaults: {
-	                        	width: 100,
-	                        	height: 100,
-	                        	margin: '10 5'
+	                        	flex: 1
 	                        },
+	                        padding: WIDTH/20+' 0 0 0',
 	                        items: [{
-	                            xtype: 'button',
-	                            text: '我的课表',
-	                            handler: pushSchedule
-//	                            handler: checkBalance
+	                        	height: WIDTH * 1.6,
+	                        	defaults: {
+	                        		height: WIDTH/3,
+	                        		margin: WIDTH/10+' 0 0 0'
+	                        	},
+	                            items: [{
+	                            	xtype: 'button',
+		                            text: '我的课表',
+		                            handler: pushSchedule
+	                            },{
+	                            	xtype: 'button',
+		                            text: '我的2',
+		                            handler: function(){}
+	                            }]
 	                        },{
-	                        	xtype: 'button',
-	                            text: '明细查询',
-//	                            handler: checkDetail
+	                        	defaults: {
+	                        		height: WIDTH/3,
+	                        		margin: WIDTH/10+' 0 0 0'
+	                        	},
+	                        	items: [{
+	                        		xtype: 'button',
+		                            text: '明细查询',
+		                            handler: function(){
+		                            	alert(Ext.getDoc().getHeight())
+		                            }
+	                        	}]
 	                        }]
-	                    }]
+	                    }
 	                }]
 	            },{
 	            	items: [{
@@ -211,7 +230,7 @@
 		});//request
     };//showSchedule
     var checkBalance = function(btn) {
-    	var view = btn.parent.parent;
+    	var view = btn.parent.parent;//todo m
         view.push({
             title: '我还有多少钱?',
             cls: 'card-total',
@@ -533,7 +552,7 @@
     }
     function createCheckDetail(pickerFn){
     	return function(btn) {
-        	var view = btn.parent.parent,
+        	var view = btn.parent.parent,//todo m
             cardPanel = view.push({
                 title: '钱到哪里去了?',
                 id: 'card-detail-panel',
@@ -637,10 +656,9 @@
 		 });
     }//校园资讯
     function pushSchedule(btn){
-    	var view = btn.parent.parent,
+    	var view = btn.parent.parent.parent,
         	cont = view.push({
             title: '我的课表',
-//            cls: 'card-total',
             items: [{
             	html: '<table class="schedule_grid"><thead>'+
             		'<tr><th></th><td>日</td><td>一</td><td>二</td><td>三</td><td>四</td><td>五</td><td>六</td></tr>'+
@@ -648,6 +666,7 @@
             },{
             	scrollable: true,
             	height: '100%',
+            	cls: 'scheduleBody',
             	itemId: 'scheduleBody',
             	html: ''
             }]
