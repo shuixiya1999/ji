@@ -26,7 +26,7 @@
 	            //first we define the xtype, which is tabpanel for the Tab Panel component
 	            xtype: 'tabpanel',
 	            id: 'tabpanel',
-	            activeItem: 2,
+	            activeItem: 1,
 	            tabBar: {
 	                // Dock it to the bottom
 	                docked: 'bottom',
@@ -43,21 +43,7 @@
 	            ui: 'light',
 
 	            //next we define the items that will appear inside our tab panel
-	            items: [{//schedule
-	                iconCls: 'schedule-icon',
-	                cls: 'card1',
-	                //content
-	                items: [{
-	                	html: '<table class="schedule_grid"><thead>'+
-	                		'<tr><th></th><td>日</td><td>一</td><td>二</td><td>三</td><td>四</td><td>五</td><td>六</td></tr>'+
-	                	'</thead></table>'
-	                },{
-	                	scrollable: true,
-	                	height: '100%',
-	                	itemId: 'scheduleBody',
-	                	html: ''
-	                }]
-	            },{
+	            items: [{
 	            	title: '校园资讯',// just a flag
 	                items: nestedList,
 	                iconCls: 'info',
@@ -71,6 +57,22 @@
 	                	height: '100%',
 	                	id: 'person-nav',
 	                	defaultBackButtonText: '返回',
+	                	navigationBar: {
+	                		items:[{
+	                			id: 'pickerBtn',
+	                			align: 'right',
+	                			text: '选择学期',
+	                			hidden: true,
+	                			handler: function(){
+	                				termPicker.show();
+	                			}
+	                		}]
+	                	},
+	                	listeners:{
+	                		back: function(){
+	                			Ext.getCmp('pickerBtn').hide();
+	                		}
+	                	},
 	                	items: {
 	                        title: '个人中心',
 	                        cls: 'person-content',
@@ -83,6 +85,9 @@
 	                        items: [{
 	                        	height: WIDTH * 1.6,
 	                        	defaults: {
+	                        		listeners:{
+		                            	initialize: pushBefore
+		                            },
 	                        		height: WIDTH/3,
 	                        		margin: WIDTH/10+' 0 0 0'
 	                        	},
@@ -92,11 +97,14 @@
 		                            handler: pushSchedule
 	                            },{
 	                            	xtype: 'button',
-		                            text: '我的2',
-		                            handler: function(){}
+		                            text: '我的成绩',
+		                            handler: pushScore
 	                            }]
 	                        },{
 	                        	defaults: {
+	                        		listeners:{
+		                            	initialize: pushBefore
+		                            },
 	                        		height: WIDTH/3,
 	                        		margin: WIDTH/10+' 0 0 0'
 	                        	},
@@ -122,6 +130,53 @@
 	                }],
 	                iconCls: 'info',
 	                cls: 'card6'
+	            },{
+	                title: 'User',
+	                iconCls: 'user-icon',
+	                cls: 'user',
+	                listeners:{
+	                	initialize: autoLogin
+	                },
+	                items: [{
+	                	id: 'login',
+	                	height: '100%',
+	                	items: [{
+	                		xtype: 'fieldset',
+	                		id: 'login-field',
+	                		items:[{
+		                		xtype: 'userfield',
+		                		id: 'usr',
+		                		labelCls: 'login-lbl',
+		                		label: '账号'
+		                	},{
+		                		xtype: 'passwordfield',
+		                		id: 'pwd',
+		                		labelCls: 'login-lbl',
+		                		label: '密码'
+		                	}]
+	                	},{
+	                		xtype: 'button',
+	                		margin: '0 0.5em',
+	                		style: 'font-size:1.3em',
+	                		ui: 'action',
+	                		text: '登 录',
+	                		handler: loginAction
+	                	}]
+	                },{
+	                	height: '100%',
+	                	items: [{
+	                		docked: 'top',
+		                	id: 'welcome',
+		                	html: ''
+		                },{
+		                	xtype: 'button',
+		                	docked: 'bottom',
+		                	cls: 'logout',
+		                	ui: 'confirm',
+		                	text: '退出当前账号',
+		                	handler: logoutAction
+		                }]
+	                }]
 	            },{
 	            	items: [{
 	                	cls: 'tab-header',
@@ -386,7 +441,7 @@
     		duration: 1000
     	});
 		Ext.getCmp('welcome').innerHtmlElement.setText('welcome '+user.userName);
-		Ext.getCmp('tabpanel').unBefore('activeitemchange',tabPanelOnBefore);
+//		Ext.getCmp('tabpanel').unBefore('activeitemchange',tabPanelOnBefore);
 		
 		//store user data
 		ID = user.userId;
@@ -400,6 +455,7 @@
 		
 		//other
 		Ext.getCmp('usr').showMore();
+		Ext.getCmp('tabpanel').getTabBar().show();
     },loginFail = function(flag){
     	var loginField = Ext.getCmp('login-field');
     	switch(flag){
@@ -461,14 +517,16 @@
 			easing: '.13, .63, .66, 1.43',
 			duration: 1000
 		});
-		Ext.getCmp('tabpanel').onBefore('activeitemchange',tabPanelOnBefore);
+//		Ext.getCmp('tabpanel').onBefore('activeitemchange',tabPanelOnBefore);
 		
 		// tabs init
-		Ext.getCmp('card-nav').pop(); // card init
-		Ext.getCmp('score-title').setTitle('给我查查成绩'); store.setData(null); // score init
+		Ext.getCmp('person-nav').pop(); // card init
+//		Ext.getCmp('score-title').setTitle('给我查查成绩'); 
+		store.setData(null); // score init
 		
 		// refresh userfield
 		Ext.getCmp('usr').refreshUsers();
+		Ext.getCmp('tabpanel').getTabBar().hide();
 	},//logoutAction
 	autoLogin = function(){
 		if(!db.getItem('userPwd')) return;
@@ -674,4 +732,20 @@
         initSchedule(cont);
         showSchedule(cont);
     }
+    function pushScore(btn){
+    	Ext.getCmp('pickerBtn').show();
+    	var view = btn.parent.parent.parent;
+    	view.push({
+    		title: '我的成绩'
+    	});
+    }
+    function pushBefore(btn){
+		btn.onBefore('tap',function(){
+			if(!ID){
+				Ext.getCmp('tabpanel').getTabBar().hide();
+				Ext.getCmp('tabpanel').setActiveItem(3);
+				return false;
+			}
+		})
+	}
 })(db);

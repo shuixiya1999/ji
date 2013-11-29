@@ -91,7 +91,7 @@ box-shadow: inset 0 0 0 2px #0aace5;-moz-box-shadow: inset 0 0 0 2px #0aace5;-we
 border-top-color:transparent;color:#333;}/*override*/
 
 /* user */
-.user{font-size:1em;}
+.user{background-color:#926D9C;font-size:1em;text-align:center;}
 .user .x-form-fieldset{margin:2em 0.5em 0.5em 0.5em;min-height: 7em;}
 .user .x-form-fieldset-instructions{margin: 0.3em;color:#00FF7F;}
 .user .x-input-el{background-color:transparent}
