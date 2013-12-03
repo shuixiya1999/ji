@@ -279,36 +279,7 @@
 			}//success
 		});//request
     };//showSchedule
-    var checkBalance = function(btn) {
-    	var view = btn.parent.parent;//todo m
-        view.push({
-            title: '我还有多少钱?',
-            cls: 'card-total',
-            html: '查询中...'
-        });
-        
-        //todo
-        //反应过慢, 网速慢, 事件, 终止ajax
-        
-        // search
-        Ext.Ajax.request({
-        	url: 'data/myEasyCard.js',
-//        	url: URL,
-        	disableCaching: false,
-        	params: {
-        		json: Ext.encode([{
-        			gxh: ID
-        		}]),
-        		m: 'myEasyCard'
-        	},
-        	success: function(r){
-        		var o = JSON.parse(r.responseText),
-        			ye = o.easyCard.ye;
-        		view.getAt(2).setHtml(ye);
-        	}
-        });
-    },
-	cardSearch = function(){
+    var cardSearch = function(){
     	var start = Ext.getCmp('startDate').getValue().getTime(),
     		end = Ext.getCmp('endDate').getValue().getTime() + 1000*3600*24,
     		cardPanel = Ext.getCmp('cardDetail');
@@ -712,7 +683,7 @@
     		cls: 'card',
     		layout: 'vbox',
     		items: [{
-    			html: 'sdsds'
+    			html: '<div id="rest">查询中...</div>'
     		},{
     			xtype: 'fieldset',
     			layout: 'hbox',
@@ -749,6 +720,23 @@
             	flex: 1,
             	html: '<div class="card-tip">说些什么吧...</div>' // must have
     		}]
-    	});
+    	});//push
+    	
+    	Ext.Ajax.request({
+        	url: 'data/myEasyCard.js',
+//        	url: URL,
+        	disableCaching: false,
+        	params: {
+        		json: Ext.encode([{
+        			gxh: ID
+        		}]),
+        		m: 'myEasyCard'
+        	},
+        	success: function(r){
+        		var o = JSON.parse(r.responseText),
+        			ye = o.easyCard.ye;
+        		Ext.get('rest').setHtml('余额 : ' + ye + '元');
+        	}
+        });
     }
 })(db);

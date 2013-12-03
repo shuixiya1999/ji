@@ -49,27 +49,7 @@ body.x-desktop .person .person-content .x-scroll-container>.x-inner{background-s
 .person{font-size:.6em;text-align:center}
 .person .person-content .x-button{background:transparent;}
 .scheduleBody .schedule_grid{margin-bottom:30px}
-/* gerenzhongxin score */
-.x-list-normal .x-list-item.x-list-item-tpl, .x-list-normal .x-list-item .x-dock-horizontal{border-top:0 none;}
-.x-list .x-list-emptytext{color:#888;}
-.score-each{box-shadow: 0 0 3px #777;line-height:1.7em;font-size:1.7em;text-align:center}
-.score-each p{color:#296ABC}
-.score-each .score-item-each{display:inline-block;width:50%;}
-.score-each .score-item-each.left{border-top:4px solid #4DB07A;background-color:#E5FFF1}
-.score-each .score-item-each.right{border-top:4px solid #E76F4E;background-color:#FFEBE5}
-.score-each .score-item-each .lbl{color:#777}
-#score-title{line-height: 1.8em;background-color:#D2F0FF;font-size: 1.4em;color:#296ABC}
-/* gerenzhongxin card */
-.card-tip{color:#888}
-.card .x-form-label span{font-size:1em}
-
-
-
-
-
-
-/***********************************************************************************************/
-/* schedule */
+/* gerenzhongxin schedule */
 .schedule_grid{width:100%}
 .schedule_grid thead{font-weight:bolder}
 .schedule_grid th{width:18px;text-align:center}
@@ -83,24 +63,29 @@ body.x-desktop .person .person-content .x-scroll-container>.x-inner{background-s
 .schedule_grid tbody tr td{vertical-align: top;}
 .schedule_grid .courseWrap{position:absolute;margin:2px;}
 .schedule_grid .course{display:table-cell;border-radius:5px;vertical-align: middle;color:#eee;}
-
-/* card */
-.card-total .x-innerhtml {padding:30px;font-size: 3em;}
-.card-detail-lbl{line-height: 100px;}
-.card-detail-block{width:330px;margin:9px auto;padding:8px 12px;border:1px solid #aaa;font-size:1.4em;line-height:1.4em;text-align:left;color:#797979}
+/* gerenzhongxin score */
+.x-list-normal .x-list-item.x-list-item-tpl, .x-list-normal .x-list-item .x-dock-horizontal{border-top:0 none;}
+.x-list .x-list-emptytext{color:#888;}
+.score-each{box-shadow: 0 0 3px #777;line-height:1.7em;font-size:1.7em;text-align:center}
+.score-each p{color:#296ABC}
+.score-each .score-item-each{display:inline-block;width:50%;}
+.score-each .score-item-each.left{border-top:4px solid #4DB07A;background-color:#E5FFF1}
+.score-each .score-item-each.right{border-top:4px solid #E76F4E;background-color:#FFEBE5}
+.score-each .score-item-each .lbl{color:#777}
+#score-title{line-height: 1.8em;background-color:#D2F0FF;font-size: 1.4em;color:#296ABC}
+#score-list.list-hidden .x-list-inner>.x-container{display:none;}
+/* gerenzhongxin card */
+.card-tip{color:#888}
+.card .x-form-label span{font-size:1.2em}
+#rest{margin:5px 20px 0;font-size:1.5em ;text-align:left;color:#7C7D7D}
+.card-detail-block{width:18em;margin:9px auto;padding:8px 12px;border:1px solid #aaa;font-size:1.4em;line-height:1.4em;text-align:left;color:#797979}
 .card-detail-block .jye{position: absolute;color:#333;}
 .card-detail-block .kye{text-align:right}
-.date .x-button-label{padding-right:50px;}
-.date-month{display:inline-block;font-size: 1.5em;line-height: 1.1em;color:#777;font-weight: 500;}
-.date-day{position: absolute;display:inline-block;margin-left:10px;font-size: 2.6em;line-height: 1.3em;color:#777;font-weight: 500;}
 
-/* score */
-.score-list{text-align:left;}
-.score-lbl{display: inline-block;width:60%;padding-right:5%;text-align:right}
-#score-list.list-hidden .x-list-inner>.x-container{display:none;}
-.x-list .x-list-item.x-item-selected .x-dock-horizontal, .x-list .x-list-item.x-item-selected.x-list-item-tpl{background:none;
-box-shadow: inset 0 0 0 2px #0aace5;-moz-box-shadow: inset 0 0 0 2px #0aace5;-webkit-box-shadow: inset 0 0 0 2px #0aace5;
-border-top-color:transparent;color:#333;}/*override*/
+
+
+
+/***********************************************************************************************/
 
 /* user */
 .user{background-color:#926D9C;font-size:1em;text-align:center;}
