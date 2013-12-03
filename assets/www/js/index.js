@@ -7,9 +7,6 @@
 	    		WIDTH = 480;
 	    	}
 	    	
-	    	var pickerFn = createPickerFn(),
-	    		checkDetail = createCheckDetail(pickerFn);
-	        
 	        var termPicker = Ext.widget('picker', {
 	            doneButton: '完成',
 	            cancelButton: '取消',
@@ -70,7 +67,9 @@
 	                	},
 	                	listeners:{
 	                		back: function(){
+	                			// for score
 	                			Ext.getCmp('pickerBtn').hide();
+	                			store.setData(null);
 	                		}
 	                	},
 	                	items: {
@@ -110,10 +109,8 @@
 	                        	},
 	                        	items: [{
 	                        		xtype: 'button',
-		                            text: '明细查询',
-		                            handler: function(){
-		                            	alert(Ext.getDoc().getHeight())
-		                            }
+		                            text: '一卡通',
+		                            handler: pushCard
 	                        	}]
 	                        }]
 	                    }
@@ -204,7 +201,7 @@
 	Ext.define('Score', {
         extend: 'Ext.data.Model',
         config: {
-            fields: ['kcmc', 'cj']
+            fields: ['kcmc', 'cj','xf']
         }
     });
 	
@@ -217,9 +214,7 @@
 			'</span><span class="date-day">'+date.getDate()+'</span>';
 	},
 	fromDate = new Date(new Date()-1000*3600*24*7),
-	from = date2str(fromDate),
-	toDate = new Date,
-	to = date2str(toDate);
+	toDate = new Date;
 	
 	var initSchedule = function(cont) {
     	var tpl = new Ext.XTemplate(
@@ -297,8 +292,8 @@
         
         // search
         Ext.Ajax.request({
-//        	url: 'data/myEasyCard.js',
-        	url: URL,
+        	url: 'data/myEasyCard.js',
+//        	url: URL,
         	disableCaching: false,
         	params: {
         		json: Ext.encode([{
@@ -313,23 +308,19 @@
         	}
         });
     },
-    getValue = function(id, plus){
-    	var cmp = Ext.getCmp(id),
-    		date = cmp.date || cmp.initialConfig.date;
-    	plus = plus ? 1 : 0;
-    	plus *= 1000*3600*24;
-    	return date.getTime() + plus;
-    },
 	cardSearch = function(){
-    	var start = getValue('start'),
-    		end = getValue('end', true),
-    		cardPanel = Ext.getCmp('card-detail-panel');
+    	var start = Ext.getCmp('startDate').getValue().getTime(),
+    		end = Ext.getCmp('endDate').getValue().getTime() + 1000*3600*24,
+    		cardPanel = Ext.getCmp('cardDetail');
     	
-    	cardPanel.setMasked(true);
+    	cardPanel.setMasked({
+    		xtype: 'loadmask',
+            message: '查询中...'
+    	});
 		// search
         Ext.Ajax.request({
-//        	url: 'data/listTransactionFlow.js',
-        	url: URL,
+        	url: 'data/listTransactionFlow.js',
+//        	url: URL,
         	disableCaching: false,
         	params: {
         		json: Ext.encode([{
@@ -366,16 +357,19 @@
 		value = value.term;
 		var vals = value.split(',');
 		
-		Ext.getCmp('score-title').setTitle(vals[0]);
+		Ext.get('score-title').setHtml(vals[0])
 		
 		var scoreList = Ext.getCmp('score-list');
 		
 		//mask
-		var scoreTab = Ext.getCmp('score').setMasked(true);
+		var scoreTab = Ext.getCmp('score').setMasked({
+			xtype: 'loadmask',
+            message: '查询中...'
+		});
 		
 		Ext.Ajax.request({
-//        	url: 'data/searchAchievement.js',
-        	url: URL,
+        	url: 'data/searchAchievement.js',
+//        	url: URL,
         	disableCaching: false,
         	params: {
         		json: Ext.encode([{
@@ -411,7 +405,7 @@
         		store.removeAll(true);
         	},
         	callback: function(){
-        		scoreTab.setMasked(false);
+        		scoreTab.unmask();
         	}
         });
     },store = Ext.create('Ext.data.Store', {
@@ -608,62 +602,6 @@
     		picker.show();
     	}
     }
-    function createCheckDetail(pickerFn){
-    	return function(btn) {
-        	var view = btn.parent.parent,//todo m
-            cardPanel = view.push({
-                title: '钱到哪里去了?',
-                id: 'card-detail-panel',
-                masked: {
-                	xtype: 'loadmask',
-                	hidden: true,
-                    message: '查询中...'
-                },
-                items: [{
-                	layout: 'hbox',
-                	height: 100,
-                	items: [{
-                		flex: 1,
-                		cls: 'card-detail-lbl',
-                		html: '从'
-                	},{
-                		xtype: 'button',
-                		cls: 'date',
-                		id: 'start',
-                		date: fromDate,
-                		text: from,
-                		flex: 2,
-                		margin: '17 10',
-                		handler: pickerFn
-                	},{
-                		flex: 1,
-                		cls: 'card-detail-lbl',
-                		html: '到'
-                	},{
-                		xtype: 'button',
-                		cls: 'date',
-                		id: 'end',
-                		date: toDate,
-                		text: to,
-                		flex: 2,
-                		margin: '17 10',
-                		handler: pickerFn
-                	},{
-                		xtype: 'button',
-                		iconCls: 'search',
-                		flex: 1,
-                		margin: '17 10',
-                		handler: cardSearch
-                	}]
-                },{
-                	id: 'cardDetail',
-                	scrollable: true,
-                	height: '100%',
-                	html: '说些什么吧...' // must have
-                }]
-            }).setMasked(false);
-        };
-    }
     function createNestedList(){
     	var data = {
 		     children: [{
@@ -736,7 +674,26 @@
     	Ext.getCmp('pickerBtn').show();
     	var view = btn.parent.parent.parent;
     	view.push({
-    		title: '我的成绩'
+    		title: '我的成绩',
+    		id: 'score',
+    		layout: 'vbox',
+    		items: [{
+    			html: '<div id="score-title">&nbsp;</div>'
+    		},{
+            	xtype: 'list',
+            	id: 'score-list',
+            	flex: 1,
+            	cls: 'score-list',
+            	disableSelection: true,
+            	itemTpl: '<div class="score-each">'+
+            		'<p>{kcmc}</p>'+
+            		'<div class="score-item-each left"><div class="lbl">学分</div>{xf}</div>'+
+            		'<div class="score-item-each right"><div class="lbl">成绩</div>{cj}</div>'+
+            	'</div>',
+            	deferEmptyText: false,
+            	emptyText: '没有数据',
+            	store: store
+            }]
     	});
     }
     function pushBefore(btn){
@@ -748,4 +705,50 @@
 			}
 		})
 	}
+    function pushCard(btn){
+    	var view = btn.parent.parent.parent;
+    	view.push({
+    		title: '一卡通',
+    		cls: 'card',
+    		layout: 'vbox',
+    		items: [{
+    			html: 'sdsds'
+    		},{
+    			xtype: 'fieldset',
+    			layout: 'hbox',
+                items: [{
+                    xtype: 'datepickerfield',
+                    label: '开始',
+                    flex: 1,
+                    id: 'startDate',
+                    picker:{
+                    	yearFrom: 2004,
+                    	cancelButton: '取消',
+                    	doneButton: '完成'
+                    },
+                    value: fromDate
+                },{
+                	xtype: 'datepickerfield',
+                    label: '结束',
+                    flex: 1,
+                    id: 'endDate',
+                    picker:{
+                    	yearFrom: 2004,
+                    	cancelButton: '取消',
+                    	doneButton: '完成'
+                    },
+                    value: toDate
+                },{
+                	xtype: 'button',
+                	iconCls: 'search',
+                	handler: cardSearch
+                }]
+    		},{
+    			id: 'cardDetail',
+            	scrollable: true,
+            	flex: 1,
+            	html: '<div class="card-tip">说些什么吧...</div>' // must have
+    		}]
+    	});
+    }
 })(db);

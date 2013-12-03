@@ -37,6 +37,8 @@ body.x-desktop .tab-content .x-inner{background-size:480px;}
 
 .x-tabbar.x-docked-bottom .x-tab .x-button-icon{font-size:1.3em}
 .x-toolbar .x-button .x-button-label, .x-toolbar .x-button .x-badge{font-size: 1em;}
+.x-picker{font-size: .7em;}
+.x-picker .x-toolbar .x-button .x-button-label, .x-toolbar .x-button .x-badge{font-size: 1em;}
 
 /* xiaoyuanzixun */
 .tab-header{height:2.1em;line-height:2.1em;background:#2075A4;color:#eee;font-size:1.5em;text-align:center;}
@@ -47,8 +49,19 @@ body.x-desktop .person .person-content .x-scroll-container>.x-inner{background-s
 .person{font-size:.6em;text-align:center}
 .person .person-content .x-button{background:transparent;}
 .scheduleBody .schedule_grid{margin-bottom:30px}
-
-
+/* gerenzhongxin score */
+.x-list-normal .x-list-item.x-list-item-tpl, .x-list-normal .x-list-item .x-dock-horizontal{border-top:0 none;}
+.x-list .x-list-emptytext{color:#888;}
+.score-each{box-shadow: 0 0 3px #777;line-height:1.7em;font-size:1.7em;text-align:center}
+.score-each p{color:#296ABC}
+.score-each .score-item-each{display:inline-block;width:50%;}
+.score-each .score-item-each.left{border-top:4px solid #4DB07A;background-color:#E5FFF1}
+.score-each .score-item-each.right{border-top:4px solid #E76F4E;background-color:#FFEBE5}
+.score-each .score-item-each .lbl{color:#777}
+#score-title{line-height: 1.8em;background-color:#D2F0FF;font-size: 1.4em;color:#296ABC}
+/* gerenzhongxin card */
+.card-tip{color:#888}
+.card .x-form-label span{font-size:1em}
 
 
 
@@ -80,7 +93,6 @@ body.x-desktop .person .person-content .x-scroll-container>.x-inner{background-s
 .date .x-button-label{padding-right:50px;}
 .date-month{display:inline-block;font-size: 1.5em;line-height: 1.1em;color:#777;font-weight: 500;}
 .date-day{position: absolute;display:inline-block;margin-left:10px;font-size: 2.6em;line-height: 1.3em;color:#777;font-weight: 500;}
-.x-button .x-button-icon.search{font-size:2em;}
 
 /* score */
 .score-list{text-align:left;}
