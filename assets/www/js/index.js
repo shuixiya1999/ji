@@ -43,11 +43,11 @@
 	            items: [{
 	            	title: '校园资讯',// just a flag
 	                items: nestedList,
-	                iconCls: 'info',
+	                iconCls: 'news-icon',
 	                cls: 'card6'
 	            },{
 	            	title: '个人中心',// just a flag
-	                iconCls: 'card-icon',
+	                iconCls: 'person-icon',
 	                cls: 'person',
 	                items: [{
 	                	xtype: 'navigationview',
@@ -55,6 +55,7 @@
 	                	id: 'person-nav',
 	                	defaultBackButtonText: '返回',
 	                	navigationBar: {
+	                		ui: 'light',
 	                		items:[{
 	                			id: 'pickerBtn',
 	                			align: 'right',
@@ -114,19 +115,20 @@
 	                        	}]
 	                        }]
 	                    }
-	                }]
+	                }]//person.items
 	            },{
+	            	title: "社交",// just a flag
+	            	iconCls: 'social-icon',
+	                cls: 'card6',
 	            	items: [{
-	                	cls: 'tab-header',
+	            		cls: 'tab-header x-toolbar x-toolbar-light x-docked-top',
 	                	html: '社交'
 	                },{
 	                	scrollable: true,
 	                	height: '100%',
 	                	cls: 'tab-content',
 	                	html: ''
-	                }],
-	                iconCls: 'info',
-	                cls: 'card6'
+	                }]
 	            },{
 	                title: 'User',
 	                iconCls: 'user-icon',
@@ -173,19 +175,20 @@
 		                	text: '退出当前账号',
 		                	handler: logoutAction
 		                }]
-	                }]
+	                }]//user.items
 	            },{
+	            	title: '更多',// just a flag
+	            	iconCls: 'more-icon',
+	                cls: 'card6',
 	            	items: [{
-	                	cls: 'tab-header',
+	                	cls: 'tab-header x-toolbar x-toolbar-light x-docked-top',
 	                	html: '更多'
 	                },{
 	                	scrollable: true,
 	                	height: '100%',
 	                	cls: 'tab-content',
 	                	html: ''
-	                }],
-	                iconCls: 'info',
-	                cls: 'card6'
+	                }]
 	            }]
 	        });// TabPanel
 	        
@@ -624,8 +627,9 @@
     }//校园资讯
     function pushSchedule(btn){
     	var view = btn.parent.parent.parent,
-        	cont = view.push({
+        cont = view.push({
             title: '我的课表',
+            cls: 'person-schedule',
             items: [{
             	html: '<table class="schedule_grid"><thead>'+
             		'<tr><th></th><td>日</td><td>一</td><td>二</td><td>三</td><td>四</td><td>五</td><td>六</td></tr>'+
@@ -647,6 +651,7 @@
     	view.push({
     		title: '我的成绩',
     		id: 'score',
+    		cls: 'person-score',
     		layout: 'vbox',
     		items: [{
     			html: '<div id="score-title">&nbsp;</div>'
@@ -680,7 +685,7 @@
     	var view = btn.parent.parent.parent;
     	view.push({
     		title: '一卡通',
-    		cls: 'card',
+    		cls: 'person-card',
     		layout: 'vbox',
     		items: [{
     			html: '<div id="rest">查询中...</div>'
