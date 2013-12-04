@@ -133,12 +133,16 @@
 	                title: 'User',
 	                iconCls: 'user-icon',
 	                cls: 'user',
+	                layout: 'vbox',
 	                listeners:{
 	                	initialize: autoLogin
 	                },
 	                items: [{
+	                	cls: 'tab-header x-toolbar x-toolbar-light x-docked-top',
+	                	html: '登录'
+	                },{
 	                	id: 'login',
-	                	height: '100%',
+	                	flex: 1,
 	                	items: [{
 	                		xtype: 'fieldset',
 	                		id: 'login-field',
@@ -162,7 +166,8 @@
 	                		handler: loginAction
 	                	}]
 	                },{
-	                	height: '100%',
+	                	id: 'half',
+	                	flex: 1,
 	                	items: [{
 	                		docked: 'top',
 		                	id: 'welcome',
@@ -179,15 +184,55 @@
 	            },{
 	            	title: '更多',// just a flag
 	            	iconCls: 'more-icon',
+	            	layout: 'vbox',
 	                cls: 'card6',
 	            	items: [{
 	                	cls: 'tab-header x-toolbar x-toolbar-light x-docked-top',
 	                	html: '更多'
 	                },{
 	                	scrollable: true,
-	                	height: '100%',
-	                	cls: 'tab-content',
-	                	html: ''
+	                	flex: 1,
+	                	cls: 'more-cont',
+	                	items: [{
+	                		xtype: 'fieldset',
+	                		items: [{
+	                			xtype: 'button',
+	                			cls: 'up',
+	                			text: '账号安全'
+	                		},{
+	                			xtype: 'button',
+	                			cls: 'down',
+	                			text: '设置'
+	                		}]
+	                	},{
+	                		xtype: 'fieldset',
+	                		items: [{
+	                			xtype: 'button',
+	                			cls: 'up',
+	                			text: '主题'
+	                		},{
+	                			xtype: 'button',
+	                			cls: 'down',
+	                			text: '壁纸'
+	                		}]
+	                	},{
+	                		xtype: 'fieldset',
+	                		items: [{
+	                			xtype: 'button',
+	                			cls: 'up',
+	                			text: '意见反馈'
+	                		},{
+	                			xtype: 'button',
+	                			text: '官方平台'
+	                		},{
+	                			xtype: 'button',
+	                			text: '新版本检测'
+	                		},{
+	                			xtype: 'button',
+	                			cls: 'down',
+	                			text: '关于计量'
+	                		}]
+	                	}]//more.cont.items
 	                }]
 	            }]
 	        });// TabPanel
@@ -408,6 +453,7 @@
     		easing: '.13, .63, .66, 1.43',
     		duration: 1000
     	});
+    	Ext.getCmp('half').show();
 		Ext.getCmp('welcome').innerHtmlElement.setText('welcome '+user.userName);
 //		Ext.getCmp('tabpanel').unBefore('activeitemchange',tabPanelOnBefore);
 		
@@ -479,6 +525,7 @@
 		loginLock = true;
 		db.remove('userId','userPwd','userName');
 		
+		Ext.getCmp('half').hide();
 		Ext.getCmp('login').show({
 			type: 'slide',
 			direction: 'down',

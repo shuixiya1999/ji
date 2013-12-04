@@ -90,11 +90,6 @@ body.x-desktop .person .person-content .x-scroll-container>.x-inner{background-s
 .card-detail-block .jye{position: absolute;color:#333;}
 .card-detail-block .kye{text-align:right}
 
-
-
-
-/***********************************************************************************************/
-
 /* user */
 .user{background-color:#926D9C;font-size:1em;text-align:center;}
 .user .x-form-fieldset{margin:2em 0.5em 0.5em 0.5em;min-height: 7em;}
@@ -103,3 +98,11 @@ body.x-desktop .person .person-content .x-scroll-container>.x-inner{background-s
 .user .x-input-password:focus{outline:none}
 .user .logout{margin: 0.6em 0.3em}
 .user .login-lbl{color:#999}
+
+/* more */
+.more-cont{background-color:#F1F2E5}
+.more-cont .x-button-label{text-align:left}
+.more-cont .x-button{border-radius:0;background:#eee;border-color:#ddd}
+.more-cont .x-button.up{border-radius:0.2em 0.2em 0 0}
+.more-cont .x-button.down{border-radius:0 0 0.2em 0.2em}
+
