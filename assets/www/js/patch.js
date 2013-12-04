@@ -52,9 +52,7 @@ Ext.viewport.Default.prototype.doBlurInput = function(e) {
 			this.callParent(arguments);
 			
 			var more = this.bodyElement.createChild({
-				cls: 'x-more-icon',
-				html: 'ㄑ'
-//				html: '〈﹤‹」〕ˇ︿﹀ㄑ'
+				cls: 'x-more-icon'
 			}).on('tap', function(e){
 				e.stopEvent();
 				list.removeCls('hide');

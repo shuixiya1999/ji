@@ -93,11 +93,11 @@
 	                        	},
 	                            items: [{
 	                            	xtype: 'button',
-		                            text: '我的课表',
+//		                            text: '我的课表',
 		                            handler: pushSchedule
 	                            },{
 	                            	xtype: 'button',
-		                            text: '我的成绩',
+//		                            text: '我的成绩',
 		                            handler: pushScore
 	                            }]
 	                        },{
@@ -110,7 +110,7 @@
 	                        	},
 	                        	items: [{
 	                        		xtype: 'button',
-		                            text: '一卡通',
+//		                            text: '一卡通',
 		                            handler: pushCard
 	                        	}]
 	                        }]
@@ -168,6 +168,7 @@
 	                },{
 	                	id: 'half',
 	                	flex: 1,
+	                	hidden: true,
 	                	items: [{
 	                		docked: 'top',
 		                	id: 'welcome',
