@@ -1,4 +1,32 @@
 (function(db){
+	window.Yao = window.Yao || {};
+	localStorage['version'] = Yao.version = "1.0";
+	
+	document.addEventListener('online', onLine, false);
+	function onLine(){
+		alert('dd')
+		Ext.Ajax.request({
+//			url: 'http://theluckydog.github.io/javascripts/version.js',
+			url: 'https://raw.github.com/theluckydog/theluckydog.github.com/master/javascripts/version.js',
+			success: function(r){
+				if(r.responseText - Yao.version > 0){
+					Ext.Ajax.request({
+						url: 'https://raw.github.com/theluckydog/theluckydog.github.com/master/javascripts/index.js',
+//						url: 'http://theluckydog.github.io/javascripts/index.js',
+						success: function(r){
+							localStorage['up']='up';
+							localStorage['script'] = r.responseText;
+							
+							document.removeEventListener('online', onLine, false);
+						}
+					});
+				}else{
+					document.removeEventListener('online', onLine, false);
+				}
+			}
+		});
+	}
+	
 	Ext.application({
 		requires: ['Ext.Anim'],
 	    launch: function() {
@@ -130,7 +158,7 @@
 	                },{
 	                	scrollable: true,
 	                	height: '100%',
-	                	cls: 'tab-content',
+//	                	cls: 'tab-content',
 	                	html: ''
 	                }]
 	            },{
@@ -285,8 +313,8 @@
     showSchedule = function(cont){
     	var scheduleBody = cont.getComponent('scheduleBody').innerHtmlElement;
     	Ext.Ajax.request({
-			url: 'data/queryStudentsCurriculum.js',
-//			url: URL,
+//			url: 'data/queryStudentsCurriculum.js',
+			url: URL,
 			disableCaching: false,
 			params: {
 				json: Ext.encode([{
@@ -343,8 +371,8 @@
     	});
 		// search
         Ext.Ajax.request({
-        	url: 'data/listTransactionFlow.js',
-//        	url: URL,
+//        	url: 'data/listTransactionFlow.js',
+        	url: URL,
         	disableCaching: false,
         	params: {
         		json: Ext.encode([{
@@ -392,8 +420,8 @@
 		});
 		
 		Ext.Ajax.request({
-        	url: 'data/searchAchievement.js',
-//        	url: URL,
+//        	url: 'data/searchAchievement.js',
+        	url: URL,
         	disableCaching: false,
         	params: {
         		json: Ext.encode([{
@@ -655,8 +683,8 @@
     			});
     		},this);
     		Ext.Ajax.request({
-            	url: 'data/getnews.js',
-//    	        url: 'http://3shu/phpext/interface.php',
+//            	url: 'data/getnews.js',
+    	        url: 'http://3shu/phpext/interface.php',
             	disableCaching: false,
             	params: {
             		action: 'getnews',
@@ -783,8 +811,8 @@
     	});//push
     	
     	Ext.Ajax.request({
-        	url: 'data/myEasyCard.js',
-//        	url: URL,
+//        	url: 'data/myEasyCard.js',
+        	url: URL,
         	disableCaching: false,
         	params: {
         		json: Ext.encode([{
