@@ -45,8 +45,9 @@ body.x-desktop .tab-content .x-inner{background-size:480px;}
 .x-picker{font-size: .7em;}
 .x-picker .x-toolbar .x-button .x-button-label, .x-toolbar .x-button .x-badge{font-size: 1em;}
 
-/* xiaoyuanzixun */
+/* xiaoyuanzixun news */
 .tab-header .x-inner{height:2.1em;line-height:2.1em;color:#eee;font-size:1.2em;font-weight:bold;text-align:center;}
+.news-list{background-color:#eee;}
 
 /* gerenzhongxin */
 .person .person-content .x-scroll-container>.x-inner{background-image:url(../img/720-1.png);background-repeat: no-repeat;background-size:cover}
@@ -72,7 +73,7 @@ body.x-desktop .person .person-content .x-scroll-container>.x-inner{background-s
 .schedule_grid .courseWrap{position:absolute;margin:2px;}
 .schedule_grid .course{display:table-cell;border-radius:5px;vertical-align: middle;color:#eee;}
 /* gerenzhongxin score */
-.x-list-normal .x-list-item.x-list-item-tpl, .x-list-normal .x-list-item .x-dock-horizontal{border-top:0 none;}
+.person .x-list-normal .x-list-item.x-list-item-tpl, .x-list-normal .x-list-item .x-dock-horizontal{border-top:0 none;}
 .x-list .x-list-emptytext{color:#888;}
 .score-each{box-shadow: 0 0 3px #777;line-height:1.7em;font-size:1.7em;text-align:center}
 .score-each p{color:#296ABC}

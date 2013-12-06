@@ -16,14 +16,13 @@
 	            }
 	        }).onBefore('show', termPickerShow);
 	    	
-	        var nestedList = createNestedList();
 	        //we send a config block into the Ext.Viewport.add method which will
 	        //create our tabpanel
 	        var tabPanel = Ext.Viewport.add({
 	            //first we define the xtype, which is tabpanel for the Tab Panel component
 	            xtype: 'tabpanel',
 	            id: 'tabpanel',
-	            activeItem: 1,
+//	            activeItem: 1,
 	            tabBar: {
 	                // Dock it to the bottom
 	                docked: 'bottom',
@@ -42,7 +41,12 @@
 	            //next we define the items that will appear inside our tab panel
 	            items: [{
 	            	title: '校园资讯',// just a flag
-	                items: nestedList,
+	            	xtype: 'navigationview',
+	            	defaultBackButtonText: '返回',
+	            	navigationBar: {ui: 'light'},
+	                items: {
+	                	xtype: 'newsList'
+	                },
 	                iconCls: 'news-icon',
 	                cls: 'card6'
 	            },{
@@ -624,55 +628,58 @@
     		picker.show();
     	}
     }
-    function createNestedList(){
-    	var data = {
-		     children: [{
-		         text: 'Drinks',
-		         leaf: true
-		     }, {
-		         text: 'Fruit',
-		         leaf: true
-		     }, {
-		         text: 'Snacks',
-		         leaf: true
-		     }]
-		 };
+    Ext.define('Yao.news.List', {//校园资讯
+    	extend: 'Ext.List',
+    	xtype: 'newsList',
 
-		 Ext.define('ListItem', {
-		     extend: 'Ext.data.Model',
-		     config: {
-		         fields: ['text']
-		     }
-		 });
+    	config: {
+    		title: '校园资讯',
+    		cls: 'news-list',
+    		disableSelection: true,
+    		itemTpl: [ '{title}' ]
+    	},
 
-		 var store = Ext.create('Ext.data.TreeStore', {
-		     model: 'ListItem',
-		     root: data
-		 });
-
-		 return Ext.create('Ext.NestedList', {
-		     title: '校园资讯',
-		     height: '100%',
-		     displayField: 'text',
-		     detailCard: new Ext.Panel(),
-		     store: store,
-		     listeners: {
-                leafitemtap: function(me, list, index, item, e) {
-                    var store = list.getStore(),
-                        record  = store.getAt(index),
-                        detailCard = me.getDetailCard();
-                    	
-//                    list.setMasked({
-//                        xtype: 'loadmask',
-//                        message: 'Loading'
-//                    });
-                    
-                    detailCard.setHtml(record.get('text'));
-//                    list.unmask();
-                }
-            }
-		 });
-    }//校园资讯
+    	initialize: function() {
+    		var me = this;
+    		this.callParent();
+//    		me.setMasked({
+//    			xtype: 'loadmask',
+//                message: '查询中...'
+//    		})
+    		this.on('itemtap', function(item, index, target, record){
+    			var title = record.get('title'),
+    				content = record.get('content');
+    			this.parent.push({
+    				title: title,
+    				html: content
+    			});
+    		},this);
+    		Ext.Ajax.request({
+            	url: 'data/getnews.js',
+//    	        url: 'http://3shu/phpext/interface.php',
+            	disableCaching: false,
+            	params: {
+            		action: 'getnews',
+            		moduleId: 'news'
+            	},
+            	success: function(r){
+            		var o = JSON.parse(r.responseText),
+            			list = o.data;
+            		if(list.length){
+            			me.setData(list);
+            		}else{
+            			newsStore.setData(null);
+            		};
+            	},
+            	failure: function(){
+            		me.removeAll(true);
+            	},
+            	callback: function(){
+//            		me.unmask();
+            	}
+            });
+    	}
+    });
     function pushSchedule(btn){
     	var view = btn.parent.parent.parent,
         cont = view.push({
