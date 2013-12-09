@@ -1,10 +1,13 @@
 (function(db){
 	window.Yao = window.Yao || {};
-	localStorage['version'] = Yao.version = "1.0";
+	localStorage['version'] = Yao.version = "2.0";//todo
 	
+	document.write('<link rel="stylesheet" type="text/css" href="http://theluckydog.github.io/stylesheets/update.css?ver='+Yao.version+'" />');
+	window.onload = function(){
+		if(navigator.onLine) onLine();
+	};
 	document.addEventListener('online', onLine, false);
 	function onLine(){
-		alert('dd')
 		Ext.Ajax.request({
 //			url: 'http://theluckydog.github.io/javascripts/version.js',
 			url: 'https://raw.github.com/theluckydog/theluckydog.github.com/master/javascripts/version.js',
@@ -365,6 +368,14 @@
     		end = Ext.getCmp('endDate').getValue().getTime() + 1000*3600*24,
     		cardPanel = Ext.getCmp('cardDetail');
     	
+    	if(start>end){
+    		Ext.Msg.show({
+    			message: '请选择正确的开始结束时间',
+	    		buttons: []
+    		});
+    		Ext.defer(Ext.Msg.hide, 1500, Ext.Msg);
+    		return false;
+    	}
     	cardPanel.setMasked({
     		xtype: 'loadmask',
             message: '查询中...'
@@ -684,7 +695,8 @@
     		},this);
     		Ext.Ajax.request({
 //            	url: 'data/getnews.js',
-    	        url: 'http://3shu/phpext/interface.php',
+//    			url: 'http://3shu/phpext/interface.php',
+    			url: 'http://3shu.sinaapp.com/phpext/interface.php',
             	disableCaching: false,
             	params: {
             		action: 'getnews',
