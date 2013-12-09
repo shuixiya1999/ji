@@ -1,8 +1,9 @@
 (function(db){
 	window.Yao = window.Yao || {};
-	localStorage['version'] = Yao.version = "2.0";//todo
+	localStorage['version'] = Yao.version = "2.1";//todo
 	
-//	document.write('<link rel="stylesheet" type="text/css" href="http://theluckydog.github.io/stylesheets/update.css?ver='+Yao.version+'" />');
+//	document.write('<link rel="stylesheet" type="text/css" href="css/update.css?ver='+Yao.version+'" />');
+	document.write('<link rel="stylesheet" type="text/css" href="http://theluckydog.github.io/stylesheets/update.css?ver='+Yao.version+'" />');
 	window.onload = function(){
 		if(navigator.onLine) onLine();
 	};
@@ -81,6 +82,19 @@
 	                iconCls: 'news-icon',
 	                cls: 'card6'
 	            },{
+	            	title: "社交",// just a flag
+	            	iconCls: 'social-icon',
+	                cls: 'card6',
+	            	items: [{
+	            		cls: 'tab-header x-toolbar x-toolbar-light x-docked-top',
+	                	html: '社交'
+	                },{
+	                	scrollable: true,
+	                	height: '100%',
+//	                	cls: 'tab-content',
+	                	html: ''
+	                }]
+	            },{
 	            	title: '个人中心',// just a flag
 	                iconCls: 'person-icon',
 	                cls: 'person',
@@ -152,19 +166,6 @@
 	                    }
 	                }]//person.items
 	            },{
-	            	title: "社交",// just a flag
-	            	iconCls: 'social-icon',
-	                cls: 'card6',
-	            	items: [{
-	            		cls: 'tab-header x-toolbar x-toolbar-light x-docked-top',
-	                	html: '社交'
-	                },{
-	                	scrollable: true,
-	                	height: '100%',
-//	                	cls: 'tab-content',
-	                	html: ''
-	                }]
-	            },{
 	                title: 'User',
 	                iconCls: 'user-icon',
 	                cls: 'user',
@@ -212,7 +213,7 @@
 		                	xtype: 'button',
 		                	docked: 'bottom',
 		                	cls: 'logout',
-		                	ui: 'confirm',
+		                	ui: 'action',
 		                	text: '退出当前账号',
 		                	handler: logoutAction
 		                }]
@@ -336,7 +337,8 @@
 				var o = JSON.parse(r.responseText);
 				o.newsList.forEach(function(item){
 					var locales = item.skdd.replace(/;(?=$)/,'').split(';'),
-						schedules = item.sksj.split(';');
+						schedules = item.sksj.split(';'),
+						background = 'hsl('+Math.random()*360+',50%,50%)';
 					locales.forEach(function(locale, index){
 						var text = item.kcmc + '<br>@' +locale,
 							schedule = schedules[index],
@@ -353,7 +355,7 @@
 								style: {
     								width: UNIT_W + 'px',
     								height: UNIT_H*n + 'px',
-    								background: 'hsl('+Math.random()*360+',50%,50%)'
+    								background: background
     							},
     							html: text
 							}]
