@@ -2,7 +2,7 @@
 	window.Yao = window.Yao || {};
 	localStorage['version'] = Yao.version = "2.0";//todo
 	
-	document.write('<link rel="stylesheet" type="text/css" href="http://theluckydog.github.io/stylesheets/update.css?ver='+Yao.version+'" />');
+//	document.write('<link rel="stylesheet" type="text/css" href="http://theluckydog.github.io/stylesheets/update.css?ver='+Yao.version+'" />');
 	window.onload = function(){
 		if(navigator.onLine) onLine();
 	};
