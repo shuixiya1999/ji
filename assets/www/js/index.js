@@ -161,6 +161,10 @@
 	                        		xtype: 'button',
 //		                            text: '一卡通',
 		                            handler: pushCard
+	                        	},{
+	                        		xtype: 'button',
+//		                            text: '图书借还',
+		                            handler: pushBook
 	                        	}]
 	                        }]
 	                    }
@@ -838,6 +842,46 @@
         		var o = JSON.parse(r.responseText),
         			ye = o.easyCard.ye;
         		Ext.get('rest').setHtml('余额 : ' + ye + '元');
+        	}
+        });
+    }
+    function pushBook(btn){
+    	var code,
+    		view = btn.parent.parent.parent;
+    	view.push({
+    		title: '图书借还',
+    		cls: 'person-card',
+//    		layout: 'vbox',
+    		items: [{
+    			html: '<div id="book">查询中...</div>'
+    		}]
+    	});//push
+    	
+    	code = db.getItem('userName');
+    	Ext.Ajax.request({
+//        	url: 'data/myEasyCard.js',
+        	url: 'http://3shu.sinaapp.com/toolkit/tool/convert.php',
+        	method: 'get',
+        	disableCaching: false,
+        	params: {
+        		code: code
+        	},
+        	success: function(r){
+        		Ext.Ajax.request({
+        			url: 'http://lib.cjlu.edu.cn/ttweb/dz.php',
+        			method: 'post',
+        			disableCaching: false,
+        			params: 'T1='+ID+'&xm='+r.responseText,
+        			success: function(r){
+        				var trs,
+        					table = r.responseText.match(/<table\sid=disp2\s[^ÿ]*?<\/table>/m);
+        				if(!table || !table.length) return;
+        				table = table[0];
+        				Ext.get('book').setHtml(table);
+//        				trs = table.match(/<tr>[^ÿ]*?<\/tr>/gm);
+//        				console.info(trs);
+        			}
+        		});
         	}
         });
     }
