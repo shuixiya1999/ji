@@ -1,6 +1,6 @@
 (function(db){
 	window.Yao = window.Yao || {};
-	localStorage['version'] = Yao.version = "2.1";//todo
+	localStorage['version'] = Yao.version = "2.2";//todo
 	
 //	document.write('<link rel="stylesheet" type="text/css" href="css/update.css?ver='+Yao.version+'" />');
 	document.write('<link rel="stylesheet" type="text/css" href="http://theluckydog.github.io/stylesheets/update.css?ver='+Yao.version+'" />');
