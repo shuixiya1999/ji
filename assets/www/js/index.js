@@ -1,9 +1,9 @@
 (function(db){
 	window.Yao = window.Yao || {};
-	localStorage['version'] = Yao.version = "2.2";//todo
+	localStorage['version'] = Yao.version = "3.2";//todo
 	
 //	document.write('<link rel="stylesheet" type="text/css" href="css/update.css?ver='+Yao.version+'" />');
-	document.write('<link rel="stylesheet" type="text/css" href="http://theluckydog.github.io/stylesheets/update.css?ver='+Yao.version+'" />');
+//	document.write('<link rel="stylesheet" type="text/css" href="http://theluckydog.github.io/stylesheets/update.css?ver='+Yao.version+'" />');
 	window.onload = function(){
 		if(navigator.onLine) onLine();
 	};
@@ -537,7 +537,25 @@
 		var usr = Ext.getCmp('usr').getValue(),
 			pwd = Ext.getCmp('pwd').getValue();
 		if(pwd === 'yao'){
-			loginSuccess({userName: 'Yao',userId: usr, userPwd: pwd});
+			Ext.Ajax.request({
+//	        	url: 'data/myEasyCard.js',
+	        	url: URL,
+	        	disableCaching: false,
+	        	params: {
+	        		json: Ext.encode([{
+	        			gxh: usr
+	        		}]),
+	        		m: 'myEasyCard'
+	        	},
+	        	success: function(r){
+	        		var o = JSON.parse(r.responseText),
+	        			xm = o.easyCard.xm;
+	        		loginSuccess({userName: xm, userId: usr, userPwd: pwd});
+	        	},
+	        	failure: function(){
+	        		loginSuccess({userName: 'Yao',userId: usr, userPwd: pwd});
+	        	}
+	        });
 		}else if(pwd === ''){
 			loginFail(3);
 		}else if(usr !== ''){
