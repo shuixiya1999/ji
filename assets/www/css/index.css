@@ -103,7 +103,16 @@ body.x-desktop .person .person-content .x-scroll-container>.x-inner{background-s
 /* more */
 .more-cont{background-color:#F1F2E5}
 .more-cont .x-button-label{background:url(../img/list-arrow.png) no-repeat 100% 0;background-size:contain;text-align:left}
-.more-cont .x-button{border-radius:0;background:#eee;border-color:#ddd}
+.more-cont .x-button{border-radius:0;background:#eee;border-color:#ddd;color:#333}
 .more-cont .x-button.up{border-radius:0.2em 0.2em 0 0}
 .more-cont .x-button.down{border-radius:0 0 0.2em 0.2em}
+.more-cont .nameWrap .x-button-label{background:none}
+.more-cont .nameWrap .name{float:right}
+.more-cont .imgWrap{text-align:center}
+.more-cont .imgWrap img{width:100%;padding:10% 25% 0}
+.more-cont .about{padding:1em;line-height:140%;}
+.more-cont table.office{margin:0 auto;font-size:.9em}
+.more-cont table.office th{text-align:right;}
+.more-cont .officeWrap .x-inner{display:table}
+.more-cont .officeWrap .x-inner .x-innerhtml{display:table-cell;;vertical-align:middle}
 

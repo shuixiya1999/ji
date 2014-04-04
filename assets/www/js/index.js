@@ -61,10 +61,6 @@
 	                layout: {
 	                    pack: 'center',
 	                    align: 'center'
-	                },
-	                scrollable: {
-	                    direction: 'horizontal',
-	                    indicators: false
 	                }
 	            },
 	            //here we specify the ui of the tabbar to light
@@ -98,9 +94,9 @@
 	            	title: '个人中心',// just a flag
 	                iconCls: 'person-icon',
 	                cls: 'person',
+	                layout: 'fit',
 	                items: [{
 	                	xtype: 'navigationview',
-	                	height: '100%',
 	                	id: 'person-nav',
 	                	defaultBackButtonText: '返回',
 	                	navigationBar: {
@@ -223,27 +219,29 @@
 		                }]
 	                }]//user.items
 	            },{
+	            	id: 'moreNav',
 	            	title: '更多',// just a flag
 	            	iconCls: 'more-icon',
-	            	layout: 'vbox',
 	                cls: 'card6',
+	                xtype: 'navigationview',
+	                defaultBackButtonText: '返回',
+	            	navigationBar: {ui: 'light'},
 	            	items: [{
-	                	cls: 'tab-header x-toolbar x-toolbar-light x-docked-top',
-	                	html: '更多'
-	                },{
+	            		title: '更多',
 	                	scrollable: true,
-	                	flex: 1,
 	                	cls: 'more-cont',
 	                	items: [{
 	                		xtype: 'fieldset',
 	                		items: [{
 	                			xtype: 'button',
 	                			cls: 'up',
-	                			text: '账号安全'
+	                			text: '账号安全',
+	                			handler: secureBtn
 	                		},{
 	                			xtype: 'button',
 	                			cls: 'down',
-	                			text: '设置'
+	                			text: '设置',
+//	                			handler: 
 	                		}]
 	                	},{
 	                		xtype: 'fieldset',
@@ -261,17 +259,21 @@
 	                		items: [{
 	                			xtype: 'button',
 	                			cls: 'up',
-	                			text: '意见反馈'
+	                			text: '意见反馈',
+	                			handler: feedbackBtn
 	                		},{
 	                			xtype: 'button',
-	                			text: '官方平台'
+	                			text: '官方平台',
+	                			handler: officeBtn
 	                		},{
 	                			xtype: 'button',
-	                			text: '新版本检测'
+	                			text: '新版本检测',
+	                			handler: versionBtn
 	                		},{
 	                			xtype: 'button',
 	                			cls: 'down',
-	                			text: '关于计量'
+	                			text: '关于计量',
+	                			handler: aboutBtn
 	                		}]
 	                	}]//more.cont.items
 	                }]
@@ -294,7 +296,7 @@
         }
     });
 	
-	var ID,URL = 'http://202.107.226.170/interface.do';
+	var ID, URL = 'http://202.107.226.170/interface.do';
 	
 	var loginLock = true;
 	
@@ -604,6 +606,7 @@
 		
 		// tabs init
 		Ext.getCmp('person-nav').pop(); // card init
+		Ext.getCmp('moreNav').pop(); // card init
 //		Ext.getCmp('score-title').setTitle('给我查查成绩'); 
 		store.setData(null); // score init
 		
@@ -902,5 +905,76 @@
         		});
         	}
         });
+    }
+    function secureBtn(btn){
+    	var view = btn.parent.parent.parent;
+    	view.push({
+    		title: '账号安全',
+    		cls: 'more-cont',
+    		items: [{
+    			xtype: 'fieldset',
+    			items: [{
+    				xtype: 'button',
+        			cls: 'up nameWrap',
+        			text: '<font class="name">'+db.getItem('userName')+'</font>姓名',
+    			},{
+    				xtype: 'button',
+        			cls: 'down',
+        			text: '密码修改',
+//        			handler: pwdBtn
+    			}]
+    		}]
+    	});
+    }
+    function officeBtn(btn){
+    	var view = btn.parent.parent.parent;
+    	view.push({
+    		title: '官方平台',
+    		cls: 'more-cont',
+    		layout: 'fit',
+    		items: [{
+    			cls: 'officeWrap',
+    			html: '<table class="office"><tbody>'+
+    					'<tr><td><img src="img/renren.png" alt="" /></td><th>人人网</th><td>「@言十量」</td></tr>'+
+    					'<tr><td></td><th></th><td>「@中国计量学院学生会」</td></tr>'+
+    					'<tr><td><img src="img/sina.png" alt="" /></td><th>新浪微博</th><td>「@中国计量学院学生会」</td></tr>'+
+    					'<tr><td><img src="img/teng.png" alt="" /></td><th>腾讯微博</th><td>「@中国计量学院学生会」</td></tr>'+
+    					'<tr><td><img src="img/wei.png" alt="" /></td><th>微信</th><td>「@言十量」</td></tr>'+
+    				'</tbody></table>'
+    		}]
+    	});
+    }
+    function versionBtn(btn){
+//    	var view = btn.parent.parent.parent;
+//    	view.push({
+//    		title: '新版本检测',
+//    		cls: 'more-cont',
+//    		items: [{
+//    			html: '新版本检测'
+//    		}]
+//    	});
+    }
+    function aboutBtn(btn){
+    	var view = btn.parent.parent.parent;
+    	view.push({
+    		title: '关于计量',
+    		cls: 'more-cont',
+    		items: [{
+    			html: '<div class="imgWrap"><img src="img/icon.png" alt="" /></div>'+
+    				'<div class="about">中国计量学院是我国质量监督检验检疫行业唯一的本科院校，'+
+    					'是一所具有鲜明的计量标准质量检验检疫特色的浙江省重点建设大学。'+
+    					'中国工程院院士庄松林教授任名誉校长，国家杰出青年基金获得者、浙江省特级专家林建忠教授任校长。</div>'
+    		}]
+    	});
+    }
+    function feedbackBtn(btn){
+    	var view = btn.parent.parent.parent;
+    	view.push({
+    		title: '用户反馈',
+    		cls: 'more-cont',
+    		items: [{
+    			html: 'xxx'
+    		}]
+    	});
     }
 })(db);
