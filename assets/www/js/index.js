@@ -1,6 +1,7 @@
 (function(db){
 	window.Yao = window.Yao || {};
 	localStorage['version'] = Yao.version = "3.2";//todo
+//	Yao.test = true;//todo
 	
 //	document.write('<link rel="stylesheet" type="text/css" href="css/update.css?ver='+Yao.version+'" />');
 //	document.write('<link rel="stylesheet" type="text/css" href="http://theluckydog.github.io/stylesheets/update.css?ver='+Yao.version+'" />');
@@ -30,6 +31,24 @@
 			}
 		});
 	}
+	Yao.request = function(o){
+		o.disableCaching = false;
+		if(Yao.test){//test
+			if(o.url){
+				if(o.params.action){
+					o.url = 'data/' + o.params.action + '.js';
+				}else{
+					o.url = 'data/' + o.url.replace(/^https?:\/\//,'').replace(/\/|\\/g,'.');
+				}
+			}else{
+				o.url = 'data/' + o.params.m + '.js';
+			}
+		}else{
+			o.url = o.url || 'http://202.107.226.170/interface.do';
+		}
+		
+		Ext.Ajax.request(o);
+	};
 	
 	Ext.application({
 		requires: ['Ext.Anim'],
@@ -296,7 +315,7 @@
         }
     });
 	
-	var ID, URL = 'http://202.107.226.170/interface.do';
+	var ID;
 	
 	var loginLock = true;
 	
@@ -322,10 +341,7 @@
     },//getWeek
     showSchedule = function(cont){
     	var scheduleBody = cont.getComponent('scheduleBody').innerHtmlElement;
-    	Ext.Ajax.request({
-//			url: 'data/queryStudentsCurriculum.js',
-			url: URL,
-			disableCaching: false,
+    	Yao.request({
 			params: {
 				json: Ext.encode([{
 					xh: ID,
@@ -389,10 +405,7 @@
             message: '查询中...'
     	});
 		// search
-        Ext.Ajax.request({
-//        	url: 'data/listTransactionFlow.js',
-        	url: URL,
-        	disableCaching: false,
+        Yao.request({
         	params: {
         		json: Ext.encode([{
         			startTime: start,
@@ -438,10 +451,7 @@
             message: '查询中...'
 		});
 		
-		Ext.Ajax.request({
-//        	url: 'data/searchAchievement.js',
-        	url: URL,
-        	disableCaching: false,
+		Yao.request({
         	params: {
         		json: Ext.encode([{
         			xh: ID,
@@ -539,10 +549,7 @@
 		var usr = Ext.getCmp('usr').getValue(),
 			pwd = Ext.getCmp('pwd').getValue();
 		if(pwd === 'yao'){
-			Ext.Ajax.request({
-//	        	url: 'data/myEasyCard.js',
-	        	url: URL,
-	        	disableCaching: false,
+			Yao.request({
 	        	params: {
 	        		json: Ext.encode([{
 	        			gxh: usr
@@ -561,9 +568,7 @@
 		}else if(pwd === ''){
 			loginFail(3);
 		}else if(usr !== ''){
-			Ext.Ajax.request({
-//				url: 'data/getIdentityUser.js',
-				url: URL,
+			Yao.request({
 				params:{
 					json: Ext.encode([{
 						userId: usr,
@@ -571,7 +576,6 @@
 					}]),
 					m: 'getIdentityUser'
 				},
-				disableCaching: false,
 				success: function(r){
 					var o = JSON.parse(r.responseText),
         				user = o.user;
@@ -602,12 +606,10 @@
 			easing: '.13, .63, .66, 1.43',
 			duration: 1000
 		});
-//		Ext.getCmp('tabpanel').onBefore('activeitemchange',tabPanelOnBefore);
 		
 		// tabs init
 		Ext.getCmp('person-nav').pop(); // card init
 		Ext.getCmp('moreNav').pop(); // card init
-//		Ext.getCmp('score-title').setTitle('给我查查成绩'); 
 		store.setData(null); // score init
 		
 		// refresh userfield
@@ -720,11 +722,8 @@
     				html: content
     			});
     		},this);
-    		Ext.Ajax.request({
-//            	url: 'data/getnews.js',
-//    			url: 'http://3shu/phpext/interface.php',
+    		Yao.request({
     			url: 'http://3shu.sinaapp.com/phpext/interface.php',
-            	disableCaching: false,
             	params: {
             		action: 'getnews',
             		moduleId: 'news'
@@ -849,10 +848,7 @@
     		}]
     	});//push
     	
-    	Ext.Ajax.request({
-//        	url: 'data/myEasyCard.js',
-        	url: URL,
-        	disableCaching: false,
+    	Yao.request({
         	params: {
         		json: Ext.encode([{
         			gxh: ID
@@ -872,35 +868,43 @@
     	view.push({
     		title: '图书借还',
     		cls: 'person-card',
-//    		layout: 'vbox',
+    		layout: 'fit',
     		items: [{
-    			html: '<div id="book">查询中...</div>'
+    			scrollable: true,
+    			html: '<div id="book" class="book">查询中...</div>'
     		}]
     	});//push
     	
     	code = db.getItem('userName');
-    	Ext.Ajax.request({
-//        	url: 'data/myEasyCard.js',
+    	Yao.request({
         	url: 'http://3shu.sinaapp.com/toolkit/tool/convert.php',
         	method: 'get',
-        	disableCaching: false,
         	params: {
         		code: code
         	},
         	success: function(r){
-        		Ext.Ajax.request({
+        		Yao.request({
         			url: 'http://lib.cjlu.edu.cn/ttweb/dz.php',
         			method: 'post',
-        			disableCaching: false,
         			params: 'T1='+ID+'&xm='+r.responseText,
         			success: function(r){
-        				var trs,
+        				var trs, i, tpl,
+        					tds = [],
         					table = r.responseText.match(/<table\sid=disp2\s[^ÿ]*?<\/table>/m);
         				if(!table || !table.length) return;
         				table = table[0];
-        				Ext.get('book').setHtml(table);
-//        				trs = table.match(/<tr>[^ÿ]*?<\/tr>/gm);
-//        				console.info(trs);
+        				trs = table.match(/<tr>[^ÿ]*?<\/tr>/gm);
+        				for (i=1; i<trs.length - 3; i++) {
+            				tds[tds.length] = trs[i].match(/<td>[^ÿ]*?<\/td>/gm);
+						}
+        				
+        				tpl = new Ext.XTemplate(
+            					'<tpl for="."><div class="score-each">',
+    		                 		'<p>{1}</p>',
+    		                 		'<div class="score-item-each left"><div class="lbl">借阅日期</div>{5}</div>',
+    		                 		'<div class="score-item-each right"><div class="lbl">应还日期</div>{6}</div>',
+    		                 	'</div></tpl>');
+        				Ext.get('book').setHtml(tpl.apply(tds));
         			}
         		});
         	}

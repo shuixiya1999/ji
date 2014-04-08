@@ -90,6 +90,8 @@ body.x-desktop .person .person-content .x-scroll-container>.x-inner{background-s
 .card-detail-block{width:18em;margin:9px auto;padding:8px 12px;border:1px solid #aaa;font-size:1.4em;line-height:1.4em;text-align:left;color:#797979}
 .card-detail-block .jye{position: absolute;color:#333;}
 .card-detail-block .kye{text-align:right}
+/* gerenzhongxin book */
+.book .score-each{margin:12px 10px}
 
 /* user */
 .user{background-color:#eee;font-size:1em;text-align:center;}
