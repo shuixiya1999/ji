@@ -888,14 +888,18 @@
         			method: 'post',
         			params: 'T1='+ID+'&xm='+r.responseText,
         			success: function(r){
-        				var trs, i, tpl,
+        				var trs, i, tpl, tmp,
         					tds = [],
         					table = r.responseText.match(/<table\sid=disp2\s[^ÿ]*?<\/table>/m);
         				if(!table || !table.length) return;
         				table = table[0];
         				trs = table.match(/<tr>[^ÿ]*?<\/tr>/gm);
         				for (i=1; i<trs.length - 3; i++) {
-            				tds[tds.length] = trs[i].match(/<td>[^ÿ]*?<\/td>/gm);
+        					tmp = trs[i].match(/<td>[^ÿ]*?<\/td>/gm);
+        					if(tmp[7].length === 9){
+        						tmp[6] = tmp[6].replace("<font color='red'>",'').replace('<\/font>','');
+        					}
+            				tds[tds.length] = tmp;
 						}
         				
         				tpl = new Ext.XTemplate(

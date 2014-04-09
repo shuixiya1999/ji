@@ -23,12 +23,12 @@ body.x-desktop{font-size:163%}/*override*/
 body.x-desktop .tab-content .x-inner{background-size:480px;}
 
 /* tabbar @class  */
-.x-tabbar.x-docked-bottom .x-tab{padding-top:0}/* override */
+.x-tabbar.x-docked-bottom .x-tab{padding-top:0;width:20%}/* override */
 .x-tabbar.x-docked-bottom .x-tab .x-button-icon.news-icon,
 .x-tabbar.x-docked-bottom .x-tab .x-button-icon.user-icon,
 .x-tabbar.x-docked-bottom .x-tab .x-button-icon.social-icon,
 .x-tabbar.x-docked-bottom .x-tab .x-button-icon.more-icon,
-.x-tabbar.x-docked-bottom .x-tab .x-button-icon.person-icon{width:100%;background:url(../img/tabbar.png);background-size: cover;}/* override */
+.x-tabbar.x-docked-bottom .x-tab .x-button-icon.person-icon{width:2.9em;height:2em;background:url(../img/tabbar.png);background-size: cover;}/* override */
 .x-tabbar.x-docked-bottom .x-tab .x-button-icon.news-icon{}
 .x-tabbar.x-docked-bottom .x-tab .x-button-icon.person-icon{background-position: 50% 0;}
 .x-tabbar.x-docked-bottom .x-tab .x-button-icon.user-icon{background-position: 76% 0;}
