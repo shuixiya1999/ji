@@ -1,7 +1,7 @@
 (function(db){
 	window.Yao = window.Yao || {};
 	localStorage['version'] = Yao.version = "3.2";//todo
-//	Yao.test = true;//todo
+	Yao.test = true;//todo
 	
 //	document.write('<link rel="stylesheet" type="text/css" href="css/update.css?ver='+Yao.version+'" />');
 //	document.write('<link rel="stylesheet" type="text/css" href="http://theluckydog.github.io/stylesheets/update.css?ver='+Yao.version+'" />');
@@ -35,7 +35,7 @@
 		o.disableCaching = false;
 		if(Yao.test){//test
 			if(o.url){
-				if(o.params.action){
+				if(o.params && o.params.action){
 					o.url = 'data/' + o.params.action + '.js';
 				}else{
 					o.url = 'data/' + o.url.replace(/^https?:\/\//,'').replace(/\/|\\/g,'.');
@@ -87,7 +87,7 @@
 
 	            //next we define the items that will appear inside our tab panel
 	            items: [{
-	            	title: '校园资讯',// just a flag
+	            	title: '网易新闻',// just a flag
 	            	xtype: 'navigationview',
 	            	defaultBackButtonText: '返回',
 	            	navigationBar: {ui: 'light'},
@@ -696,15 +696,35 @@
     		picker.show();
     	}
     }
+    Ext.define('Yao.plugin.PullRefresh', {
+		extend : 'Ext.plugin.PullRefresh',
+		
+		fetchLatest: function() {
+			this.getList().refresh(function(){
+				this.setState("loaded");
+		        this.fireEvent('latestfetched', this);
+		        if (this.getAutoSnapBack()) {
+		            this.snapBack();
+		        }
+			}, this);
+	    },
+	});
     Ext.define('Yao.news.List', {//校园资讯
     	extend: 'Ext.List',
     	xtype: 'newsList',
 
     	config: {
-    		title: '校园资讯',
+    		title: '网易新闻',
     		cls: 'news-list',
+    		id: 'xxx',
     		disableSelection: true,
-    		itemTpl: [ '{title}' ]
+    		itemTpl: ['<table><tbody><tr><td><div class="img" style="background-image:url({imgsrc})"></div></td>',
+    		          	'<td><p class="title">{title}</p><p class="digest">{digest}</p></td></tr></tbody></table>'],
+          	plugins: [{
+  	            xclass: 'Yao.plugin.PullRefresh',
+  	            pullText: '下拉可以刷新',
+  	            releaseText: '松开可以刷新',
+          	}],
     	},
 
     	initialize: function() {
@@ -716,32 +736,63 @@
 //    		})
     		this.on('itemtap', function(item, index, target, record){
     			var title = record.get('title'),
-    				content = record.get('content');
+    				docid = record.get('docid');
     			this.parent.push({
     				title: title,
-    				html: content
+    				scrollable: true,
+    				html: '<div id="news" class="news-content">...</div>'
+    			});
+    			if(Yao.test) docid = 'xxx';
+    			Yao.request({
+    				url: 'http://c.m.163.com/nc/article/'+docid+'/full.html',
+    				success: function(r){
+    					var o = JSON.parse(r.responseText),
+    						cnt = o[docid],
+    						head = '<div class="header">'+cnt.title+'</div>' + 
+    								'<div class="subtitle">来源:'+cnt.source+' '+cnt.ptime+'</div>',
+    						body = cnt.body;
+    					
+    					if(cnt.img && cnt.img.length){
+    						cnt.img.forEach(function(img){
+    							body = body.replace(img.ref, '<img src="'+img.src+'" alt="'+img.alt+'" />')
+    						});
+    					}
+    					Ext.get('news').setHtml(head + body);
+    				},
+    				failure: function(){
+    					
+    				}
     			});
     		},this);
+    		
+    		this.refresh();
+    	},
+    	
+    	refresh: function(callback, scope){
+    		// todo T134xxx
+    		var me = this,
+    			id = 'T1347415223240';
     		Yao.request({
-    			url: 'http://3shu.sinaapp.com/phpext/interface.php',
-            	params: {
-            		action: 'getnews',
-            		moduleId: 'news'
-            	},
+    			url: 'http://c.m.163.com/nc/article/headline/'+id+'/0-20.html', 
+//    			url: 'http://3shu.sinaapp.com/phpext/interface.php',
+//            	params: {
+//            		action: 'getnews',
+//            		moduleId: 'news'
+//            	},
             	success: function(r){
             		var o = JSON.parse(r.responseText),
-            			list = o.data;
+            			list = o[id];
             		if(list.length){
             			me.setData(list);
             		}else{
-            			newsStore.setData(null);
+            			me.setData(null);
             		};
             	},
             	failure: function(){
             		me.removeAll(true);
             	},
             	callback: function(){
-//            		me.unmask();
+            		if(typeof callback === 'function') callback.call(scope);
             	}
             });
     	}

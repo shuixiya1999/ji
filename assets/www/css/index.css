@@ -23,7 +23,7 @@ body.x-desktop{font-size:163%}/*override*/
 body.x-desktop .tab-content .x-inner{background-size:480px;}
 
 /* tabbar @class  */
-.x-tabbar.x-docked-bottom .x-tab{padding-top:0;width:20%}/* override */
+.x-tabbar.x-docked-bottom .x-tab{padding-top:0;width:20%;border-radius:0}/* override */
 .x-tabbar.x-docked-bottom .x-tab .x-button-icon.news-icon,
 .x-tabbar.x-docked-bottom .x-tab .x-button-icon.user-icon,
 .x-tabbar.x-docked-bottom .x-tab .x-button-icon.social-icon,
@@ -48,6 +48,15 @@ body.x-desktop .tab-content .x-inner{background-size:480px;}
 /* xiaoyuanzixun news */
 .tab-header .x-inner{height:2.1em;line-height:2.1em;color:#eee;font-size:1.2em;font-weight:bold;text-align:center;}
 .news-list{background-color:#eee;}
+.news-list.x-list .x-list-item .x-list-item-body, .x-list .x-list-item.x-list-item-tpl .x-innerhtml{padding:.5em;overflow:hidden}
+.news-list div.img{width:4em;height:3em;margin-right:.5em;background-size:cover;background-position: center center;}
+.news-list p.title{font-size:.8em}
+.news-list p.digest{margin-top:.5em;font-size:.7em;color:#808080}
+.news-content{padding:.5em;line-height:1.4em;color:#585858}
+.news-content p{margin:.6em 0}
+.news-content img{display:block;width:100%;}
+.news-content .header{font-size:1.1em;color:#000}
+.news-content .subtitle{font-size:.7em;color:#808080}
 
 /* gerenzhongxin */
 .person .person-content .x-scroll-container>.x-inner{background-image:url(../img/720-1.png);background-repeat: no-repeat;background-size:cover}

@@ -132,3 +132,5 @@ Ext.viewport.Default.prototype.doBlurInput = function(e) {
 		}//refreshUsers
 	});
 })(db);
+
+document.ondragstart = function(){return false;}
