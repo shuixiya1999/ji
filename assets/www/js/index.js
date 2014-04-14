@@ -1,7 +1,7 @@
 (function(db){
 	window.Yao = window.Yao || {};
 	localStorage['version'] = Yao.version = "3.2";//todo
-	Yao.test = true;//todo
+//	Yao.test = true;//todo
 	
 //	document.write('<link rel="stylesheet" type="text/css" href="css/update.css?ver='+Yao.version+'" />');
 //	document.write('<link rel="stylesheet" type="text/css" href="http://theluckydog.github.io/stylesheets/update.css?ver='+Yao.version+'" />');
@@ -696,18 +696,71 @@
     		picker.show();
     	}
     }
+    
     Ext.define('Yao.plugin.PullRefresh', {
-		extend : 'Ext.plugin.PullRefresh',
-		
-		fetchLatest: function() {
-			this.getList().refresh(function(){
-				this.setState("loaded");
-		        this.fireEvent('latestfetched', this);
-		        if (this.getAutoSnapBack()) {
-		            this.snapBack();
-		        }
-			}, this);
-	    },
+    	extend : 'Ext.plugin.PullRefresh',
+    	config: {
+    		loadingText: '正在刷新...',
+    		pullText: '下拉可以刷新',
+    		releaseText: '松开可以刷新',
+    	},
+    	fetchLatest: function() {
+    		this.getList().renderNews({
+    			callback: function(){
+    				this.setState("loaded");
+        			this.fireEvent('latestfetched', this);
+        			if (this.getAutoSnapBack()) {
+        				this.snapBack();
+        			}
+    			},
+    			scope: this
+    		});
+    	},
+    });
+    Ext.define('Yao.plugin.ListPaging', {
+		extend : 'Ext.plugin.ListPaging',
+		config: {
+			autoPaging: true,
+			loadMoreCmp: {
+	            hidden: false
+	        },
+	        loadMoreText: '20条载入中...',
+	        loadMoreFail: '加载失败,点击重试',
+	        loadTpl: [
+	              '<div class="x-loading-spinner paging {hide}">',
+	                   '<span class="x-loading-top"></span>',
+	                   '<span class="x-loading-right"></span>',
+	                   '<span class="x-loading-bottom"></span>',
+	                   '<span class="x-loading-left"></span>',
+	              '</div>',
+	              '<div class="x-list-paging-msg paging">{message}</div>'
+	          ].join('')
+		},
+		loadNextPage: function(){
+	        var list = this.getList();
+	        if(list.getStore()){
+	        	list.renderNews({
+	        		callback: function(suc){
+	        			var cmp = this.getLoadMoreCmp(),
+	        				tpl = this.getLoadTpl(),
+	        				hide, msg;
+	        			if(suc){
+	        				hide = '';
+	        				msg = this.getLoadMoreText();
+	        			}else{
+	        				hide = 'hide';
+	        				msg = this.getLoadMoreFail();
+	        			}
+	        			cmp.setHtml(tpl.apply({
+	        				hide: hide,
+	        				message: msg
+	        			}));
+	        		},
+	        		scope: this,
+	        		loadMore: true
+	        	});
+	        }
+		},
 	});
     Ext.define('Yao.news.List', {//校园资讯
     	extend: 'Ext.List',
@@ -720,20 +773,19 @@
     		disableSelection: true,
     		itemTpl: ['<table><tbody><tr><td><div class="img" style="background-image:url({imgsrc})"></div></td>',
     		          	'<td><p class="title">{title}</p><p class="digest">{digest}</p></td></tr></tbody></table>'],
-          	plugins: [{
-  	            xclass: 'Yao.plugin.PullRefresh',
-  	            pullText: '下拉可以刷新',
-  	            releaseText: '松开可以刷新',
-          	}],
+          	plugins: [
+          	    {xclass: 'Yao.plugin.ListPaging'},
+          		{xclass: 'Yao.plugin.PullRefresh'}
+          	],
     	},
 
     	initialize: function() {
-    		var me = this;
     		this.callParent();
-//    		me.setMasked({
-//    			xtype: 'loadmask',
-//                message: '查询中...'
-//    		})
+    		this.initEvent();
+    		this.renderNews();
+    	},
+    	
+    	initEvent: function(){
     		this.on('itemtap', function(item, index, target, record){
     			var title = record.get('title'),
     				docid = record.get('docid');
@@ -764,16 +816,19 @@
     				}
     			});
     		},this);
-    		
-    		this.refresh();
     	},
     	
-    	refresh: function(callback, scope){
+    	renderNews: function(cfg/*callback, scope*/){
     		// todo T134xxx
     		var me = this,
-    			id = 'T1347415223240';
+    			id = 'T1347415223240',
+    			page = 0;
+    		cfg = cfg || {};
+    		if(cfg.loadMore){
+    			page = this.page + 20;
+    		}
     		Yao.request({
-    			url: 'http://c.m.163.com/nc/article/headline/'+id+'/0-20.html', 
+    			url: 'http://c.m.163.com/nc/article/headline/'+id+'/' + page + '-20.html', 
 //    			url: 'http://3shu.sinaapp.com/phpext/interface.php',
 //            	params: {
 //            		action: 'getnews',
@@ -781,21 +836,27 @@
 //            	},
             	success: function(r){
             		var o = JSON.parse(r.responseText),
-            			list = o[id];
+            			list = o[id],
+            			store;
             		if(list.length){
+            			if(!page){
+            				store = me.getStore();
+                			if(store) store.removeAll(true);
+            			}
             			me.setData(list);
             		}else{
             			me.setData(null);
             		};
+            		me.page = page;
             	},
             	failure: function(){
-            		me.removeAll(true);
+            		
             	},
-            	callback: function(){
-            		if(typeof callback === 'function') callback.call(scope);
+            	callback: function(opt, suc){
+            		if(typeof cfg.callback === 'function') cfg.callback.call(cfg.scope, suc);
             	}
             });
-    	}
+    	},
     });
     function pushSchedule(btn){
     	var view = btn.parent.parent.parent,

@@ -1,7 +1,7 @@
 /* common */
 body{background-color:#333;color:#333;}
 input,textarea{color:#333}
-.hide{display:none}
+.hide{display:none !important}
 body.x-desktop{font-size:163%}/*override*/
 /* userfield */
 .x-more-icon{position:absolute;display:none;top:0.5em;right:0;width:1.4em;height:2.2em;color:#999;text-align:center;-moz-transform:rotate(90deg);-webkit-transform:rotate(90deg)}
@@ -22,6 +22,10 @@ body.x-desktop{font-size:163%}/*override*/
 .tab-content .x-inner{background-image:url(../img/720.png);background-repeat: no-repeat;background-size:cover}
 body.x-desktop .tab-content .x-inner{background-size:480px;}
 
+/* Yao.plugin.ListPaging */
+.x-list-paging .x-innerhtml{text-align:center}
+.x-list-paging .x-loading-spinner.paging{display:inline-block;margin-right:.5em;font-size:1em;vertical-align: bottom;}
+.x-list-paging .x-list-paging-msg.paging{display:inline-block;color:#505050}
 /* tabbar @class  */
 .x-tabbar.x-docked-bottom .x-tab{padding-top:0;width:20%;border-radius:0}/* override */
 .x-tabbar.x-docked-bottom .x-tab .x-button-icon.news-icon,
@@ -54,7 +58,7 @@ body.x-desktop .tab-content .x-inner{background-size:480px;}
 .news-list p.digest{margin-top:.5em;font-size:.7em;color:#808080}
 .news-content{padding:.5em;line-height:1.4em;color:#585858}
 .news-content p{margin:.6em 0}
-.news-content img{display:block;width:100%;}
+.news-content img{display:block;width:100%;max-width:35em;}
 .news-content .header{font-size:1.1em;color:#000}
 .news-content .subtitle{font-size:.7em;color:#808080}
 
