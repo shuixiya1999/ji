@@ -532,6 +532,10 @@
 		//other
 		Ext.getCmp('usr').showMore();
 		Ext.getCmp('tabpanel').getTabBar().show();
+		Yao.request({
+			url: 'xxx',
+			params: 'xxx'
+		});
     },loginFail = function(flag){
     	var loginField = Ext.getCmp('login-field');
     	switch(flag){
@@ -769,7 +773,6 @@
     	config: {
     		title: '网易新闻',
     		cls: 'news-list',
-    		id: 'xxx',
     		disableSelection: true,
     		itemTpl: ['<table><tbody><tr><td><div class="img" style="background-image:url({imgsrc})"></div></td>',
     		          	'<td><p class="title">{title}</p><p class="digest">{digest}</p></td></tr></tbody></table>'],
@@ -827,6 +830,8 @@
     		if(cfg.loadMore){
     			page = this.page + 20;
     		}
+    		this.removeCls('fail');
+    		this.failMaskCmp && this.failMaskCmp.addCls('hide');
     		Yao.request({
     			url: 'http://c.m.163.com/nc/article/headline/'+id+'/' + page + '-20.html', 
 //    			url: 'http://3shu.sinaapp.com/phpext/interface.php',
@@ -850,13 +855,31 @@
             		me.page = page;
             	},
             	failure: function(){
-            		
+            		cfg.loadMore || me.failMask();
             	},
             	callback: function(opt, suc){
             		if(typeof cfg.callback === 'function') cfg.callback.call(cfg.scope, suc);
             	}
             });
     	},
+    	
+    	failMask: function(){
+    		this.addCls('fail');// for paging plugin
+    		
+    		if(!this.failMaskCmp){
+    			this.failMaskCmp = this.add({
+                    xtype: 'component',
+                    cls: this.getBaseCls() + '-emptytext fail-mask',
+                    html: '<div class="oops">x&nbsp;&nbsp;x<br>___</div>'+
+                    		'<p>哎呀! 网络异常!</p><p>下拉, 重新加载.</p>'
+                });
+    			
+        		// todo
+        		// event
+    		}else{
+    			this.failMaskCmp.removeCls('hide');
+    		}
+    	}
     });
     function pushSchedule(btn){
     	var view = btn.parent.parent.parent,

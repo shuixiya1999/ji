@@ -24,8 +24,12 @@ body.x-desktop .tab-content .x-inner{background-size:480px;}
 
 /* Yao.plugin.ListPaging */
 .x-list-paging .x-innerhtml{text-align:center}
-.x-list-paging .x-loading-spinner.paging{display:inline-block;margin-right:.5em;font-size:1em;vertical-align: bottom;}
+.x-list-paging .x-loading-spinner.paging{display:inline-block;margin-right:.5em;font-size:1em;vertical-align: top;}
 .x-list-paging .x-list-paging-msg.paging{display:inline-block;color:#505050}
+.fail .x-list-paging{display:none}
+/* oops */
+.oops{display: inline-block;width: 3em;height:3em;padding-top: .4em;line-height:.9em;border: 0.2em solid;border-radius: 4em;font-weight:bold;}
+.fail-mask p{margin:.5em 0}
 /* tabbar @class  */
 .x-tabbar.x-docked-bottom .x-tab{padding-top:0;width:20%;border-radius:0}/* override */
 .x-tabbar.x-docked-bottom .x-tab .x-button-icon.news-icon,
@@ -61,6 +65,7 @@ body.x-desktop .tab-content .x-inner{background-size:480px;}
 .news-content img{display:block;width:100%;max-width:35em;}
 .news-content .header{font-size:1.1em;color:#000}
 .news-content .subtitle{font-size:.7em;color:#808080}
+.news-content strong{font-weight: bold;}
 
 /* gerenzhongxin */
 .person .person-content .x-scroll-container>.x-inner{background-image:url(../img/720-1.png);background-repeat: no-repeat;background-size:cover}
