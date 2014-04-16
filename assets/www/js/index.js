@@ -49,6 +49,14 @@
 		
 		Ext.Ajax.request(o);
 	};
+	Yao.alert = function(msg){
+		Ext.Msg.addCls('alert');
+		Ext.Msg.show({
+			message: msg,
+    		buttons: []
+		});
+		Ext.defer(Ext.Msg.hide, 2000, Ext.Msg);
+	};
 	
 	Ext.application({
 		requires: ['Ext.Anim'],
@@ -844,7 +852,13 @@
             		me.page = page;
             	},
             	failure: function(){
-            		cfg.loadMore || me.failMask();
+            		if(!cfg.loadMore){
+            			if(me.getStore()){
+            				Yao.alert('网络不给力');
+            			}else{
+            				me.showFailMask()
+            			}
+            		}
             	},
             	callback: function(opt, suc){
             		if(typeof cfg.callback === 'function') cfg.callback.call(cfg.scope, suc);
@@ -852,7 +866,7 @@
             });
     	},
     	
-    	failMask: function(){
+    	showFailMask: function(){
     		this.addCls('fail');// for paging plugin
     		
     		if(!this.failMaskCmp){
@@ -862,9 +876,6 @@
                     html: '<div class="oops">x&nbsp;&nbsp;x<br>___</div>'+
                     		'<p>哎呀! 网络异常!</p><p>下拉, 重新加载.</p>'
                 });
-    			
-        		// todo
-        		// event
     		}else{
     			this.failMaskCmp.removeCls('hide');
     		}
