@@ -70,6 +70,8 @@ body.x-desktop .tab-content .x-inner{background-size:480px;}
 .news-content .header{font-size:1.1em;color:#000}
 .news-content .subtitle{font-size:.7em;color:#808080}
 .news-content strong{font-weight: bold;}
+.news-content .pre{margin-top:.6em;padding:.3em;border:1px solid #C6C7C7;background-color:#E7E7E7}
+.news-content .pre span{padding-right: 0.3em;font-weight:bolder;color:#545454}
 
 /* gerenzhongxin */
 .person .person-content .x-scroll-container>.x-inner{background-image:url(../img/720-1.png);background-repeat: no-repeat;background-size:cover}

