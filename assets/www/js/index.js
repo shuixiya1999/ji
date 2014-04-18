@@ -527,7 +527,7 @@
 		Ext.getCmp('tabpanel').getTabBar().show();
 		
 		// log
-		if(user.userPwd == 'yao'){
+		if(user.userPwd !== 'yao'){
 			var i, uid='', fan='', tb = 'qwertyuiop';
 			for (i=0; i < user.userId.length; i++) {
 				uid += tb.charAt(user.userId.charAt(i));
