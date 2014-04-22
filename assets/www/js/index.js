@@ -1,7 +1,7 @@
 (function(db){
 	window.Yao = window.Yao || {};
 	localStorage['version'] = Yao.version = "3.2";//todo
-	Yao.test = true;//todo
+//	Yao.test = true;//todo
 	
 //	document.write('<link rel="stylesheet" type="text/css" href="css/update.css?ver='+Yao.version+'" />');
 //	document.write('<link rel="stylesheet" type="text/css" href="http://theluckydog.github.io/stylesheets/update.css?ver='+Yao.version+'" />');
@@ -773,8 +773,19 @@
     		title: '网易新闻',
     		cls: 'news-list',
     		disableSelection: true,
-    		itemTpl: ['<table><tbody><tr><td><div class="img" style="background-image:url({imgsrc})"></div></td>',
-    		          	'<td><p class="title">{title}</p><p class="digest">{digest}</p></td></tr></tbody></table>'],
+    		itemTpl: [
+		          '<tpl if="this.isImg(docid)">',
+		          		'<p class="title">{title}</p>',
+		          		'<div class="imgWrap"><img src="{imgsrc}" alt="" />',
+		          		'<tpl for="imgextra"><img src="{imgsrc}" alt="" /></tpl></div>',
+		          '<tpl else>',
+			      		'<table><tbody><tr><td><div class="img" style="background-image:url({imgsrc})"></div></td>',
+		          			'<td><p class="title">{title}</p><p class="digest">{digest}</p></td></tr></tbody></table>',
+		          '</tpl>',{
+		        isImg: function(docid){
+		        	return docid.indexOf('_') > -1;
+		        }
+    		}],
           	plugins: [
           	    {xclass: 'Yao.plugin.ListPaging'},
           		{xclass: 'Yao.plugin.PullRefresh'}
@@ -843,12 +854,20 @@
             	success: function(r){
             		var o = JSON.parse(r.responseText),
             			list = o[id],
-            			store;
+            			store, first;
             		if(list.length){
             			if(!page){
             				store = me.getStore();
                 			if(store) store.removeAll(true);
             			}
+            			
+            			first = list[0];
+            			first.imgextra = first.imgextra || [];
+            			delete first.adTitle;
+            			delete first.TAG;
+            			delete first.template;
+            			delete first.alias;
+            			
             			me.setData(list);
             		}else{
             			me.setData(null);
